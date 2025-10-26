@@ -1002,8 +1002,12 @@ function AdminDashboard() {
     { id: 2, address: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6', network: 'ERC20', isActive: true }
   ])
   const [tasks, setTasks] = useState([
-    { id: 1, title: 'Follow Instagram', description: 'Follow our Instagram account', reward: 2.50, type: 'MANUAL', status: 'ACTIVE' },
-    { id: 2, title: 'Join Telegram', description: 'Join our Telegram group', reward: 5.00, type: 'MANUAL', status: 'ACTIVE' }
+    { id: 1, title: 'Follow Instagram Account', description: 'Follow our Instagram account and like 5 recent posts', reward: 2.50, type: 'MANUAL', status: 'ACTIVE' },
+    { id: 2, title: 'Join Telegram Group', description: 'Join our Telegram group and stay active for 7 days', reward: 5.00, type: 'MANUAL', status: 'ACTIVE' },
+    { id: 3, title: 'Download Mobile App', description: 'Download and install our mobile app', reward: 3.00, type: 'MANUAL', status: 'ACTIVE' },
+    { id: 4, title: 'Subscribe YouTube Channel', description: 'Subscribe to our YouTube channel and watch 3 videos', reward: 1.50, type: 'MANUAL', status: 'ACTIVE' },
+    { id: 5, title: 'Follow Twitter Account', description: 'Follow our Twitter account and retweet 2 posts', reward: 2.00, type: 'MANUAL', status: 'ACTIVE' },
+    { id: 6, title: 'Join Discord Server', description: 'Join our Discord server and stay active for 5 days', reward: 4.00, type: 'MANUAL', status: 'ACTIVE' }
   ])
   const [editingAddress, setEditingAddress] = useState(null)
   const [levelModal, setLevelModal] = useState({ show: false, userId: null, currentLevel: 0 })
@@ -1093,17 +1097,49 @@ function AdminDashboard() {
   }
 
   const addTask = () => {
-    const newTask = {
-      id: tasks.length + 1,
-      title: prompt('Enter Task Title:'),
-      description: prompt('Enter Task Description:'),
-      reward: parseFloat(prompt('Enter Reward Amount:')),
-      type: 'MANUAL',
-      status: 'ACTIVE'
-    }
-    if (newTask.title && newTask.description && newTask.reward) {
+    const title = prompt('Enter Task Title:')
+    const description = prompt('Enter Task Description:')
+    const rewardStr = prompt('Enter Reward Amount:')
+    
+    if (title && description && rewardStr) {
+      const newTask = {
+        id: tasks.length + 1,
+        title: title,
+        description: description,
+        reward: parseFloat(rewardStr),
+        type: 'MANUAL',
+        status: 'ACTIVE'
+      }
       setTasks([...tasks, newTask])
+      alert('Task added successfully!')
     }
+  }
+
+  const editTask = (taskId) => {
+    const task = tasks.find(t => t.id === taskId)
+    const title = prompt('Enter Task Title:', task.title)
+    const description = prompt('Enter Task Description:', task.description)
+    const rewardStr = prompt('Enter Reward Amount:', task.reward.toString())
+    
+    if (title && description && rewardStr) {
+      setTasks(tasks.map(t => 
+        t.id === taskId ? { ...t, title, description, reward: parseFloat(rewardStr) } : t
+      ))
+      alert('Task updated successfully!')
+    }
+  }
+
+  const deleteTask = (taskId) => {
+    if (confirm('Are you sure you want to delete this task?')) {
+      setTasks(tasks.filter(t => t.id !== taskId))
+      alert('Task deleted successfully!')
+    }
+  }
+
+  const toggleTaskStatus = (taskId) => {
+    setTasks(tasks.map(t => 
+      t.id === taskId ? { ...t, status: t.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE' } : t
+    ))
   }
 
   return (
@@ -1257,16 +1293,39 @@ function AdminDashboard() {
             <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {tasks.map(task => (
-                  <div key={task.id} className="card">
-                    <h4 className="text-xl font-semibold mb-2">{task.title}</h4>
-                    <p className="text-gray-600 mb-4">{task.description}</p>
-                    <div className="flex justify-between items-center mb-4">
-                      <span className="badge badge-primary">{task.type}</span>
-                      <span className="text-2xl font-bold text-green-600">${task.reward}</span>
+                  <div key={task.id} className="card border-2 border-gray-200">
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex-1">
+                        <h4 className="text-xl font-semibold mb-2">{task.title}</h4>
+                        <p className="text-gray-600 text-sm mb-3">{task.description}</p>
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="badge badge-primary">{task.type}</span>
+                          <span className={`badge ${task.status === 'ACTIVE' ? 'badge-success' : 'badge-warning'}`}>
+                            {task.status}
+                          </span>
+                          <span className="text-2xl font-bold text-green-600">${task.reward}</span>
+                        </div>
+                      </div>
                     </div>
                     <div className="flex space-x-2">
-                      <button className="btn-primary flex-1">Edit</button>
-                      <button className="btn-danger flex-1">Delete</button>
+                      <button 
+                        onClick={() => editTask(task.id)}
+                        className="btn-primary flex-1 px-3 py-2"
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        onClick={() => toggleTaskStatus(task.id)}
+                        className="px-3 py-2 rounded text-sm bg-yellow-500 text-white hover:bg-yellow-600 flex-1"
+                      >
+                        {task.status === 'ACTIVE' ? 'Deactivate' : 'Activate'}
+                      </button>
+                      <button 
+                        onClick={() => deleteTask(task.id)}
+                        className="btn-danger flex-1 px-3 py-2"
+                      >
+                        Delete
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -1523,22 +1582,27 @@ function Tasks() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {tasks.map(task => (
-            <div key={task.id} className="card hover:shadow-2xl transition-all duration-300">
+            <div key={task.id} className="card hover:shadow-2xl transition-all duration-300 border-2 border-gray-100">
               <div className="text-center mb-4">
                 <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
                   <span className="text-2xl">📋</span>
                 </div>
                 <h3 className="text-xl font-semibold mb-2">{task.title}</h3>
-                <p className="text-gray-600 mb-4">{task.description}</p>
+                <p className="text-gray-600 mb-4 text-sm">{task.description}</p>
               </div>
               
               <div className="flex justify-between items-center mb-4">
-                <span className="badge badge-primary">{task.type}</span>
+                <div className="flex gap-2">
+                  <span className="badge badge-primary">{task.type}</span>
+                  <span className={`badge ${task.status === 'ACTIVE' ? 'badge-success' : 'badge-warning'}`}>
+                    {task.status}
+                  </span>
+                </div>
                 <span className="text-2xl font-bold text-green-600">${task.reward}</span>
               </div>
               
               <button className="btn-primary w-full">
-                Start Task
+                {task.status === 'ACTIVE' ? 'Start Task' : 'Task Unavailable'}
               </button>
             </div>
           ))}
