@@ -24,6 +24,9 @@ import paymentMethodsRoutes from './routes/payment-methods';
 const app = express();
 const PORT = process.env.PORT || 3002;
 
+// Trust proxy (for Nginx reverse proxy)
+app.set('trust proxy', true);
+
 // Security middleware
 app.use(helmet({
   contentSecurityPolicy: {
