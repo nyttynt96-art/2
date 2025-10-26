@@ -603,7 +603,7 @@ router.post('/tasks', asyncHandler(async (req: AuthenticatedRequest, res) => {
       ...data,
       status: 'ACTIVE',
       currentParticipants: 0,
-    },
+    } as any,
   });
 
   // Create admin action record

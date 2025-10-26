@@ -59,7 +59,7 @@ router.post('/', asyncHandler(async (req: AuthenticatedRequest, res) => {
   const data = createPaymentMethodSchema.parse(req.body);
 
   const paymentMethod = await prisma.paymentMethod.create({
-    data,
+    data: data as any,
   });
 
   logger.info(`Payment method created: ${paymentMethod.name} by ${req.user?.email}`);
