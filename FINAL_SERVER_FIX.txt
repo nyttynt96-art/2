@@ -1,0 +1,24 @@
+# الحل النهائي للمشكلة
+
+## على السيرفر، نفذ هذا الأمر:
+
+```bash
+cd /var/www/promohive
+git pull origin main
+rm -rf dist
+npm run build
+pm2 restart promohive-server
+pm2 save
+pm2 logs promohive-server --lines 50
+```
+
+## السبب:
+- الكود الأصلي تم تعديله لكن لم يتم بناءه من جديد
+- dist/ يحتوي على الكود القديم
+- يجب حذف dist وإعادة بناءه
+
+## بعد التنفيذ:
+- لن تظهر أخطاء trust proxy
+- Dashboard سيعمل بشكل صحيح
+- كل شيء سيعمل
+
