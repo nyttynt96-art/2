@@ -1,10 +1,83 @@
 import React, { useState, useEffect } from 'react'
 import { Route, Switch } from 'wouter'
 
+// Notification Context
+const NotificationContext = React.createContext()
+
+function NotificationProvider({ children }) {
+  const [notifications, setNotifications] = useState([])
+
+  const showNotification = (message, type = 'info') => {
+    const id = Date.now()
+    const notification = { id, message, type }
+    setNotifications([...notifications, notification])
+    
+    setTimeout(() => {
+      setNotifications(notifications.filter(n => n.id !== id))
+    }, 5000)
+  }
+
+  const removeNotification = (id) => {
+    setNotifications(notifications.filter(n => n.id !== id))
+  }
+
+  return (
+    <NotificationContext.Provider value={{ showNotification, removeNotification }}>
+      {children}
+      <div className="fixed top-4 right-4 z-50 space-y-2 max-w-sm">
+        {notifications.map(notification => (
+          <div
+            key={notification.id}
+            className={`p-4 rounded-lg shadow-lg transform transition-all duration-300 ${
+              notification.type === 'success' ? 'bg-green-500 text-white' :
+              notification.type === 'error' ? 'bg-red-500 text-white' :
+              notification.type === 'warning' ? 'bg-yellow-500 text-white' :
+              'bg-blue-500 text-white'
+            } animate-slide-in`}
+          >
+            <div className="flex items-center justify-between">
+              <span>{notification.message}</span>
+              <button
+                onClick={() => removeNotification(notification.id)}
+                className="ml-4 text-white hover:text-gray-200"
+              >
+                ✕
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </NotificationContext.Provider>
+  )
+}
+
 // Navigation Component
 function Navigation({ user, onLogout }) {
   const supportWhatsApp = '+17253348692'
   const supportEmail = 'promohive@globalpromonetwork.store'
+
+  const navItems = [
+    { href: '/', icon: '🏠', label: 'Home', loggedIn: false },
+    { href: '/dashboard', icon: '📊', label: 'Dashboard', loggedIn: true },
+    { href: '/tasks', icon: '📋', label: 'Tasks', loggedIn: true },
+    { href: '/referrals', icon: '👥', label: 'Referrals', loggedIn: true },
+    { href: '/withdrawals', icon: '💰', label: 'Withdrawals', loggedIn: true },
+    { href: '/luck-wheel', icon: '🎰', label: 'Luck Wheel', loggedIn: true },
+    { href: '/mining', icon: '⛏️', label: 'Mining', loggedIn: true },
+    { href: '/admin', icon: '🛠️', label: 'Admin', loggedIn: true, adminOnly: true },
+  ]
+
+  const NavIcon = ({ href, icon, label }) => (
+    <a 
+      href={href} 
+      className="group relative flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-white/10 transition-all duration-300 transform hover:scale-110"
+      title={label}
+    >
+      <span className="text-2xl group-hover:animate-bounce">{icon}</span>
+      <span className="nav-link hidden sm:inline">{label}</span>
+      <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+    </a>
+  )
 
   return (
     <nav className="glass-effect sticky top-0 z-40">
@@ -12,7 +85,7 @@ function Navigation({ user, onLogout }) {
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 gradient-bg rounded-lg flex items-center justify-center animate-pulse">
                 <span className="text-white font-bold text-xl">P</span>
               </div>
               <h1 className="text-2xl font-bold gradient-text">
@@ -21,29 +94,28 @@ function Navigation({ user, onLogout }) {
             </div>
           </div>
           <div className="flex items-center space-x-4">
-            <div className="flex space-x-6">
-              <a href="/" className="nav-link">Home</a>
+            <div className="flex space-x-2">
               {!user ? (
                 <>
-                  <a href="/login" className="nav-link">Login</a>
-                  <a href="/register" className="nav-link">Register</a>
+                  <NavIcon href="/login" icon="🔑" label="Login" />
+                  <NavIcon href="/register" icon="📝" label="Register" />
                 </>
               ) : (
                 <>
-                  <a href="/dashboard" className="nav-link">Dashboard</a>
-                  <a href="/tasks" className="nav-link">Tasks</a>
-                  <a href="/referrals" className="nav-link">Referrals</a>
-                  <a href="/withdrawals" className="nav-link">Withdrawals</a>
-                  <a href="/luck-wheel" className="nav-link">Luck Wheel</a>
-                  <a href="/mining" className="nav-link">Mining</a>
-                  {user.role === 'ADMIN' || user.role === 'SUPER_ADMIN' ? (
-                    <a href="/admin" className="nav-link">Admin</a>
-                  ) : null}
+                  {navItems
+                    .filter(item => !item.loggedIn || (item.loggedIn && user))
+                    .filter(item => !item.adminOnly || (item.adminOnly && (user.role === 'ADMIN' || user.role === 'SUPER_ADMIN')))
+                    .map(item => (
+                      <NavIcon key={item.href} href={item.href} icon={item.icon} label={item.label} />
+                    ))}
                   <button 
                     onClick={onLogout}
-                    className="text-gray-700 hover:text-red-500 transition-colors duration-200 font-medium"
+                    className="group flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-red-500/20 transition-all duration-300 transform hover:scale-110"
+                    title="Logout"
                   >
-                    Logout
+                    <span className="text-2xl group-hover:animate-pulse">🚪</span>
+                    <span className="text-gray-700 hover:text-red-500 transition-colors duration-200 font-medium hidden sm:inline">Logout</span>
+                    <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-red-500 via-red-600 to-red-700 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
                   </button>
                 </>
               )}
@@ -54,7 +126,7 @@ function Navigation({ user, onLogout }) {
                 href={`https://wa.me/${supportWhatsApp.replace(/[^0-9]/g, '')}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-2 px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200 font-medium"
+                className="flex items-center gap-2 px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 hover:scale-110 transition-all duration-300 font-medium animate-pulse"
                 title="Contact us on WhatsApp"
               >
                 <span>📱</span>
@@ -62,7 +134,7 @@ function Navigation({ user, onLogout }) {
               </a>
               <a 
                 href={`mailto:${supportEmail}`}
-                className="flex items-center gap-2 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium"
+                className="flex items-center gap-2 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 hover:scale-110 transition-all duration-300 font-medium"
                 title="Contact us via Email"
               >
                 <span>✉️</span>
@@ -1992,21 +2064,23 @@ function Withdrawals() {
 
 function App() {
   return (
-    <AuthProvider>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/login" component={Login} />
-        <Route path="/register" component={Register} />
-        <Route path="/dashboard" component={Dashboard} />
-        <Route path="/tasks" component={Tasks} />
-        <Route path="/referrals" component={Referrals} />
-        <Route path="/withdrawals" component={Withdrawals} />
-        <Route path="/luck-wheel" component={LuckWheel} />
-        <Route path="/mining" component={MiningContracts} />
-        <Route path="/admin" component={AdminDashboard} />
-        <Route component={NotFound} />
-      </Switch>
-    </AuthProvider>
+    <NotificationProvider>
+      <AuthProvider>
+        <Switch>
+          <Route path="/" component={Home} />
+          <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
+          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/tasks" component={Tasks} />
+          <Route path="/referrals" component={Referrals} />
+          <Route path="/withdrawals" component={Withdrawals} />
+          <Route path="/luck-wheel" component={LuckWheel} />
+          <Route path="/mining" component={MiningContracts} />
+          <Route path="/admin" component={AdminDashboard} />
+          <Route component={NotFound} />
+        </Switch>
+      </AuthProvider>
+    </NotificationProvider>
   )
 }
 

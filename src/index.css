@@ -147,6 +147,21 @@ body {
   50% { transform: translateY(-10px); }
 }
 
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
 /* Loading Spinner */
 .spinner {
   @apply animate-spin rounded-full border-4 border-gray-200 border-t-blue-500;
