@@ -41,7 +41,7 @@ function NotificationProvider({ children }) {
                 onClick={() => removeNotification(notification.id)}
                 className="ml-4 text-white hover:text-gray-200"
               >
-                ✕
+                âœ•
               </button>
             </div>
           </div>
@@ -57,15 +57,15 @@ function Navigation({ user, onLogout }) {
   const supportEmail = 'promohive@globalpromonetwork.store'
 
   const navItems = [
-    { href: '/', icon: '🏠', label: 'Home', loggedIn: false },
-    { href: '/dashboard', icon: '📊', label: 'Dashboard', loggedIn: true },
-    { href: '/tasks', icon: '📋', label: 'Tasks', loggedIn: true },
-    { href: '/referrals', icon: '👥', label: 'Referrals', loggedIn: true },
-    { href: '/withdrawals', icon: '💰', label: 'Withdrawals', loggedIn: true },
-    { href: '/luck-wheel', icon: '🎰', label: 'Luck Wheel', loggedIn: true },
-    { href: '/mining', icon: '⛏️', label: 'Mining', loggedIn: true },
-    { href: '/profile', icon: '👤', label: 'Profile', loggedIn: true },
-    { href: '/admin', icon: '🛠️', label: 'Admin', loggedIn: true, adminOnly: true },
+    { href: '/', icon: 'ًںڈ ', label: 'Home', loggedIn: false },
+    { href: '/dashboard', icon: 'ًں“ٹ', label: 'Dashboard', loggedIn: true },
+    { href: '/tasks', icon: 'ًں“‹', label: 'Tasks', loggedIn: true },
+    { href: '/referrals', icon: 'ًں‘¥', label: 'Referrals', loggedIn: true },
+    { href: '/withdrawals', icon: 'ًں’°', label: 'Withdrawals', loggedIn: true },
+    { href: '/luck-wheel', icon: 'ًںژ°', label: 'Luck Wheel', loggedIn: true },
+    { href: '/mining', icon: 'â›ڈï¸ڈ', label: 'Mining', loggedIn: true },
+    { href: '/profile', icon: 'ًں‘¤', label: 'Profile', loggedIn: true },
+    { href: '/admin', icon: 'ًں› ï¸ڈ', label: 'Admin', loggedIn: true, adminOnly: true },
   ]
 
   const NavIcon = ({ href, icon, label }) => (
@@ -98,8 +98,8 @@ function Navigation({ user, onLogout }) {
             <div className="flex space-x-2">
               {!user ? (
                 <>
-                  <NavIcon href="/login" icon="🔑" label="Login" />
-                  <NavIcon href="/register" icon="📝" label="Register" />
+                  <NavIcon href="/login" icon="ًں”‘" label="Login" />
+                  <NavIcon href="/register" icon="ًں“‌" label="Register" />
                 </>
               ) : (
                 <>
@@ -114,7 +114,7 @@ function Navigation({ user, onLogout }) {
                     className="group flex items-center space-x-2 px-4 py-2 rounded-lg hover:bg-red-500/20 transition-all duration-300 transform hover:scale-110"
                     title="Logout"
                   >
-                    <span className="text-2xl group-hover:animate-pulse">🚪</span>
+                    <span className="text-2xl group-hover:animate-pulse">ًںڑھ</span>
                     <span className="text-gray-700 hover:text-red-500 transition-colors duration-200 font-medium hidden sm:inline">Logout</span>
                     <div className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-red-500 via-red-600 to-red-700 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
                   </button>
@@ -130,7 +130,7 @@ function Navigation({ user, onLogout }) {
                 className="flex items-center gap-2 px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 hover:scale-110 transition-all duration-300 font-medium animate-pulse"
                 title="Contact us on WhatsApp"
               >
-                <span>📱</span>
+                <span>ًں“±</span>
                 <span className="hidden sm:inline">WhatsApp</span>
               </a>
               <a 
@@ -138,7 +138,7 @@ function Navigation({ user, onLogout }) {
                 className="flex items-center gap-2 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 hover:scale-110 transition-all duration-300 font-medium"
                 title="Contact us via Email"
               >
-                <span>✉️</span>
+                <span>âœ‰ï¸ڈ</span>
                 <span className="hidden sm:inline">Email</span>
               </a>
             </div>
@@ -220,13 +220,13 @@ function Home() {
                 href="/register" 
                 className="btn-primary text-lg px-8 py-4 transform hover:scale-110 transition-all duration-300 shadow-2xl"
               >
-                Get Started Now ✨
+                Get Started Now âœ¨
               </a>
               <a 
                 href="/login" 
                 className="btn-outline text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-purple-600 transform hover:scale-110 transition-all duration-300"
               >
-                Login 🔑
+                Login ًں”‘
               </a>
             </div>
           </div>
@@ -269,7 +269,7 @@ function Home() {
         <div className="relative max-w-7xl mx-auto px-4 text-center">
           <div className="inline-block bg-white/20 backdrop-blur-lg rounded-2xl px-8 py-6 border border-white/30 shadow-2xl">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 drop-shadow-lg animate-pulse">
-              🎁 Seize the Opportunity!
+              ًںژپ Seize the Opportunity!
             </h2>
             <p className="text-xl md:text-2xl text-white mb-4 drop-shadow-md">
               Sign up for a new account and earn $5 instantly!
@@ -279,7 +279,7 @@ function Home() {
                 href="/register" 
                 className="btn-primary text-lg px-8 py-4 bg-white text-green-600 hover:bg-gray-100 transform hover:scale-110 transition-all duration-300 shadow-2xl font-bold"
               >
-                Get Your $5 Bonus 🚀
+                Get Your $5 Bonus ًںڑ€
               </a>
               <span className="text-white text-sm opacity-80">
                 Available to all new users
@@ -302,7 +302,7 @@ function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             <div className="stats-card animate-float delay-100">
               <div className="stats-icon bg-blue-100 text-blue-600 mb-4">
-                💰
+                ًں’°
               </div>
               <h3 className="text-xl font-semibold mb-3">Earn Money</h3>
               <p className="text-gray-600">Complete tasks and earn real money through our advanced platform</p>
@@ -310,7 +310,7 @@ function Home() {
             
             <div className="stats-card animate-float delay-200">
               <div className="stats-icon bg-pink-100 text-pink-600 mb-4">
-                👥
+                ًں‘¥
               </div>
               <h3 className="text-xl font-semibold mb-3">Referral System</h3>
               <p className="text-gray-600">Invite friends and earn bonuses from their activities</p>
@@ -318,7 +318,7 @@ function Home() {
             
             <div className="stats-card animate-float delay-300">
               <div className="stats-icon bg-purple-100 text-purple-600 mb-4">
-                🎰
+                ًںژ°
               </div>
               <h3 className="text-xl font-semibold mb-3">Luck Wheel</h3>
               <p className="text-gray-600">Spin the wheel daily and win up to $0.30 per spin</p>
@@ -326,7 +326,7 @@ function Home() {
             
             <div className="stats-card animate-float delay-400">
               <div className="stats-icon bg-green-100 text-green-600 mb-4">
-                ⛏️
+                â›ڈï¸ڈ
               </div>
               <h3 className="text-xl font-semibold mb-3">Mining Contracts</h3>
               <p className="text-gray-600">Invest in mining contracts and earn passive income</p>
