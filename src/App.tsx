@@ -685,16 +685,29 @@ function LuckWheel() {
   const [spinsLeft, setSpinsLeft] = useState(3)
   const [lastSpinDate, setLastSpinDate] = useState(null)
 
+  // Probability-based prizes: lower prizes have more slots
   const prizes = [
-    { value: 0.05, color: '#FF6B6B', label: '$0.05' },
-    { value: 0.10, color: '#4ECDC4', label: '$0.10' },
-    { value: 0.15, color: '#45B7D1', label: '$0.15' },
-    { value: 0.20, color: '#96CEB4', label: '$0.20' },
-    { value: 0.25, color: '#FFEAA7', label: '$0.25' },
-    { value: 0.30, color: '#DDA0DD', label: '$0.30' },
-    { value: 0.05, color: '#98D8C8', label: '$0.05' },
-    { value: 0.10, color: '#F7DC6F', label: '$0.10' }
+    { value: 0.02, color: '#FF6B6B', label: '$0.02', weight: 20 }, // Very common
+    { value: 0.03, color: '#FF9999', label: '$0.03', weight: 20 },
+    { value: 0.05, color: '#4ECDC4', label: '$0.05', weight: 15 },
+    { value: 0.08, color: '#45B7D1', label: '$0.08', weight: 10 },
+    { value: 0.10, color: '#96CEB4', label: '$0.10', weight: 8 },
+    { value: 0.15, color: '#FFEAA7', label: '$0.15', weight: 5 },
+    { value: 0.20, color: '#DDA0DD', label: '$0.20', weight: 2 },
+    { value: 0.30, color: '#FFD700', label: '$0.30', weight: 1 } // Very rare
   ]
+
+  // Calculate weighted random prize
+  const getRandomPrize = () => {
+    const totalWeight = prizes.reduce((sum, prize) => sum + prize.weight, 0)
+    let random = Math.random() * totalWeight
+    
+    for (const prize of prizes) {
+      random -= prize.weight
+      if (random <= 0) return prize
+    }
+    return prizes[0]
+  }
 
   if (loading) {
     return (
@@ -729,7 +742,7 @@ function LuckWheel() {
     setResult(null)
 
     setTimeout(() => {
-      const randomPrize = prizes[Math.floor(Math.random() * prizes.length)]
+      const randomPrize = getRandomPrize()
       setResult(randomPrize)
       setSpinsLeft(spinsLeft - 1)
       setIsSpinning(false)
@@ -992,6 +1005,8 @@ function AdminDashboard() {
     { id: 1, title: 'Follow Instagram', description: 'Follow our Instagram account', reward: 2.50, type: 'MANUAL', status: 'ACTIVE' },
     { id: 2, title: 'Join Telegram', description: 'Join our Telegram group', reward: 5.00, type: 'MANUAL', status: 'ACTIVE' }
   ])
+  const [editingAddress, setEditingAddress] = useState(null)
+  const [levelModal, setLevelModal] = useState({ show: false, userId: null, currentLevel: 0 })
 
   if (loading) {
     return (
@@ -1033,15 +1048,48 @@ function AdminDashboard() {
   }
 
   const addUSDTAddress = () => {
-    const newAddress = {
-      id: usdtAddresses.length + 1,
-      address: prompt('Enter USDT Address:'),
-      network: prompt('Enter Network (TRC20/ERC20):'),
-      isActive: true
-    }
-    if (newAddress.address && newAddress.network) {
+    const address = prompt('Enter USDT Address:')
+    const network = prompt('Enter Network (TRC20/ERC20):')
+    if (address && network) {
+      const newAddress = {
+        id: usdtAddresses.length + 1,
+        address: address,
+        network: network,
+        isActive: true
+      }
       setUsdtAddresses([...usdtAddresses, newAddress])
     }
+  }
+
+  const editUSDTAddress = (addressId) => {
+    const address = usdtAddresses.find(a => a.id === addressId)
+    const newAddress = prompt('Enter new USDT Address:', address.address)
+    const newNetwork = prompt('Enter Network (TRC20/ERC20):', address.network)
+    if (newAddress && newNetwork) {
+      setUsdtAddresses(usdtAddresses.map(a => 
+        a.id === addressId ? { ...a, address: newAddress, network: newNetwork } : a
+      ))
+    }
+  }
+
+  const deleteUSDTAddress = (addressId) => {
+    if (confirm('Are you sure you want to delete this USDT address?')) {
+      setUsdtAddresses(usdtAddresses.filter(a => a.id !== addressId))
+    }
+  }
+
+  const toggleAddressStatus = (addressId) => {
+    setUsdtAddresses(usdtAddresses.map(a => 
+      a.id === addressId ? { ...a, isActive: !a.isActive } : a
+    ))
+  }
+
+  const updateUserLevel = (userId, newLevel) => {
+    setUsers(users.map(u => 
+      u.id === userId ? { ...u, level: newLevel } : u
+    ))
+    setLevelModal({ show: false, userId: null, currentLevel: 0 })
+    alert(`User level updated to L${newLevel}`)
   }
 
   const addTask = () => {
@@ -1172,15 +1220,23 @@ function AdminDashboard() {
                       <td className="table-cell text-gray-500">${user.balance}</td>
                       <td className="table-cell text-gray-500">L{user.level}</td>
                       <td className="table-cell font-medium">
-                        {!user.isApproved && (
+                        <div className="flex space-x-2">
+                          {!user.isApproved && (
+                            <button 
+                              onClick={() => approveUser(user.id)}
+                              className="text-green-600 hover:text-green-900 font-medium"
+                            >
+                              Approve
+                            </button>
+                          )}
                           <button 
-                            onClick={() => approveUser(user.id)}
-                            className="text-green-600 hover:text-green-900 mr-3"
+                            onClick={() => setLevelModal({ show: true, userId: user.id, currentLevel: user.level })}
+                            className="text-purple-600 hover:text-purple-900 font-medium"
                           >
-                            Approve
+                            Set Level
                           </button>
-                        )}
-                        <button className="text-blue-600 hover:text-blue-900">Edit</button>
+                          <button className="text-blue-600 hover:text-blue-900 font-medium">Edit</button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -1231,15 +1287,34 @@ function AdminDashboard() {
               <div className="space-y-4">
                 {usdtAddresses.map(address => (
                   <div key={address.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <div>
-                      <p className="font-mono text-sm">{address.address}</p>
-                      <span className="badge badge-primary">{address.network}</span>
+                    <div className="flex-1">
+                      <p className="font-mono text-sm mb-2">{address.address}</p>
+                      <div className="flex gap-2">
+                        <span className="badge badge-primary">{address.network}</span>
+                        <span className={`badge ${address.isActive ? 'badge-success' : 'badge-danger'}`}>
+                          {address.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                      </div>
                     </div>
                     <div className="flex space-x-2">
-                      <span className={`badge ${address.isActive ? 'badge-success' : 'badge-danger'}`}>
-                        {address.isActive ? 'Active' : 'Inactive'}
-                      </span>
-                      <button className="btn-primary">Edit</button>
+                      <button 
+                        onClick={() => toggleAddressStatus(address.id)}
+                        className={`px-3 py-1 rounded text-sm ${address.isActive ? 'bg-yellow-500 text-white' : 'bg-green-500 text-white'}`}
+                      >
+                        {address.isActive ? 'Deactivate' : 'Activate'}
+                      </button>
+                      <button 
+                        onClick={() => editUSDTAddress(address.id)}
+                        className="btn-primary px-4 py-2"
+                      >
+                        Edit
+                      </button>
+                      <button 
+                        onClick={() => deleteUSDTAddress(address.id)}
+                        className="btn-danger px-4 py-2"
+                      >
+                        Delete
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -1296,6 +1371,46 @@ function AdminDashboard() {
           </div>
         )}
       </div>
+
+      {/* Level Modal */}
+      {levelModal.show && (
+        <div className="modal-overlay">
+          <div className="modal-content">
+            <h3 className="text-2xl font-bold gradient-text mb-4">Set User Level</h3>
+            <p className="text-gray-600 mb-6">Current Level: L{levelModal.currentLevel}</p>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">New Level (0-3)</label>
+                <input 
+                  type="number" 
+                  id="newLevel"
+                  min="0" 
+                  max="3" 
+                  defaultValue={levelModal.currentLevel}
+                  className="form-input"
+                />
+              </div>
+              <div className="flex space-x-3">
+                <button 
+                  onClick={() => {
+                    const newLevel = parseInt(document.getElementById('newLevel').value)
+                    updateUserLevel(levelModal.userId, newLevel)
+                  }}
+                  className="btn-primary flex-1"
+                >
+                  Update Level
+                </button>
+                <button 
+                  onClick={() => setLevelModal({ show: false, userId: null, currentLevel: 0 })}
+                  className="btn-outline flex-1"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
