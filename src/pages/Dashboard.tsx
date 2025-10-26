@@ -226,7 +226,7 @@ export default function Dashboard() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="dashboard-card-value">${wallet.balance.toFixed(2)}</div>
+              <div className="dashboard-card-value">${(Number(wallet?.balance) || 0).toFixed(2)}</div>
               <p className="text-sm text-gray-600 mt-1">
                 Available for withdrawal
               </p>
@@ -241,7 +241,7 @@ export default function Dashboard() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="dashboard-card-value">${wallet.totalEarned.toFixed(2)}</div>
+              <div className="dashboard-card-value">${(Number(wallet?.totalEarned) || 0).toFixed(2)}</div>
               <p className="text-sm text-gray-600 mt-1">
                 Lifetime earnings
               </p>
