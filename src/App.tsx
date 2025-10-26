@@ -1199,36 +1199,32 @@ function LuckWheel() {
                     })}
                     
                     {/* Center Circle */}
-                    <circle cx="160" cy="160" r="40" fill="white" stroke="#333" strokeWidth="3"/>
-                    <text x="160" y="170" textAnchor="middle" fontSize="16" fontWeight="bold">SPIN</text>
+                    <circle cx="160" cy="160" r="40" fill="white" stroke="#9333EA" strokeWidth="4"/>
+                    <text x="160" y="170" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#9333EA">SPIN</text>
                   </svg>
                   
-                  {/* Prize Labels - Rotated text for each sector */}
-                  <g>
-                    {prizes.map((prize, index) => {
-                      const angle = (index * 45 - 22.5) * (Math.PI / 180)
-                      const x = 160 + 90 * Math.cos(angle)
-                      const y = 160 + 90 * Math.sin(angle)
-                      
-                      return (
-                        <text
-                          key={index}
-                          x={x}
-                          y={y}
-                          textAnchor="middle"
-                          dominantBaseline="middle"
-                          fill="white"
-                          stroke="black"
-                          strokeWidth="2"
-                          fontSize="18"
-                          fontWeight="bold"
-                          transform={`rotate(${index * 45}, ${x}, ${y})`}
-                        >
+                  {/* Prize Labels inside wheel sectors */}
+                  {prizes.map((prize, index) => {
+                    const angle = (index * 45 - 22.5) * (Math.PI / 180)
+                    const x = 160 + 85 * Math.cos(angle)
+                    const y = 160 + 85 * Math.sin(angle)
+                    
+                    return (
+                      <div
+                        key={index}
+                        className="absolute"
+                        style={{
+                          left: `${x}px`,
+                          top: `${y}px`,
+                          transform: 'translate(-50%, -50%)',
+                        }}
+                      >
+                        <div className="text-white font-black text-sm drop-shadow-lg" style={{ fontSize: '14px' }}>
                           ${prize.value.toFixed(2)}
-                        </text>
-                      )
-                    })}
-                  </g>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
               
