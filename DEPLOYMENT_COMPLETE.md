@@ -5,7 +5,7 @@ This guide provides step-by-step instructions to deploy PromoHive on Ubuntu 24.0
 ## 📋 Prerequisites
 
 - Ubuntu 24.04 LTS VPS (root access via SSH)
-- Domain name (optional but recommended)
+- Domain: **globalpromonetwork.store** ✅
 - Basic knowledge of Linux commands
 
 ## 🔧 Server Setup
@@ -72,7 +72,7 @@ NODE_ENV=production
 JWT_SECRET="your_secure_random_secret_key"
 
 # CORS
-CORS_ORIGIN="http://YOUR_DOMAIN.com"
+CORS_ORIGIN="https://globalpromonetwork.store"
 
 # Email (Configure with your SMTP)
 SMTP_HOST="smtp.gmail.com"
@@ -111,11 +111,35 @@ Create Nginx configuration:
 sudo nano /etc/nginx/sites-available/promohive
 ```
 
-Add the following:
+Add the following (for HTTPS with SSL):
 ```nginx
 server {
     listen 80;
-    server_name YOUR_DOMAIN_OR_IP;
+    listen [::]:80;
+    server_name globalpromonetwork.store www.globalpromonetwork.store;
+
+    # Redirect HTTP to HTTPS
+    location / {
+        return 301 https://$server_name$request_uri;
+    }
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name globalpromonetwork.store www.globalpromonetwork.store;
+
+    # SSL certificates (will be added by Certbot)
+    ssl_certificate /etc/letsencrypt/live/globalpromonetwork.store/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/globalpromonetwork.store/privkey.pem;
+
+    # Security headers
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-XSS-Protection "1; mode=block" always;
+    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
+
+    client_max_body_size 10M;
 
     client_max_body_size 10M;
 
@@ -149,7 +173,7 @@ sudo apt-get install certbot python3-certbot-nginx -y
 
 Obtain SSL certificate:
 ```bash
-sudo certbot --nginx -d YOUR_DOMAIN
+sudo certbot --nginx -d globalpromonetwork.store -d www.globalpromonetwork.store
 ```
 
 ## 🔄 Updating the Application
@@ -258,9 +282,10 @@ sudo kill -9 <PID>
 
 ## 🌐 Access Your Application
 
-- **Local**: http://YOUR_SERVER_IP
-- **With Domain**: https://YOUR_DOMAIN.com
-- **Admin Panel**: https://YOUR_DOMAIN.com/admin
+- **Main**: https://globalpromonetwork.store
+- **WWW**: https://www.globalpromonetwork.store
+- **Dashboard**: https://globalpromonetwork.store/dashboard
+- **Admin Panel**: https://globalpromonetwork.store/admin
 
 ## 📝 Notes
 
