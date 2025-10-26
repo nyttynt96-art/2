@@ -194,24 +194,39 @@ function Home() {
         
         <div className="relative max-w-7xl mx-auto px-4 text-center">
           <div className="animate-float">
-            <h1 className="text-6xl md:text-8xl font-bold text-white mb-6 text-shadow">
+            {/* PromoHive Logo */}
+            <div className="mb-8 flex justify-center">
+              <div className="relative">
+                <img 
+                  src="/logo.png" 
+                  alt="PromoHive Logo" 
+                  className="w-48 md:w-64 h-auto drop-shadow-2xl animate-bounce-slow"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-black/20 rounded-full blur-2xl"></div>
+              </div>
+            </div>
+            
+            <h1 className="text-6xl md:text-8xl font-bold text-white mb-4 text-shadow">
               PromoHive
             </h1>
-            <p className="text-xl md:text-2xl text-white mb-8 max-w-3xl mx-auto opacity-90">
-              Global Promo Network Platform - Earn money by completing promotional tasks, referrals, and multi-level marketing
+            <p className="text-xl md:text-2xl text-white mb-2 max-w-3xl mx-auto opacity-90">
+              GLOBAL PROMO NETWORK
+            </p>
+            <p className="text-lg md:text-xl text-white mb-8 max-w-3xl mx-auto opacity-75">
+              Earn money by completing promotional tasks, referrals, and multi-level marketing
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
                 href="/register" 
-                className="btn-primary text-lg px-8 py-4"
+                className="btn-primary text-lg px-8 py-4 transform hover:scale-110 transition-all duration-300 shadow-2xl"
               >
-                Get Started Now
+                Get Started Now ✨
               </a>
               <a 
                 href="/login" 
-                className="btn-outline text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-orange-600"
+                className="btn-outline text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-orange-600 transform hover:scale-110 transition-all duration-300"
               >
-                Login
+                Login 🔑
               </a>
             </div>
           </div>
