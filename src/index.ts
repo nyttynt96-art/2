@@ -76,11 +76,12 @@ app.get('/health', (_req, res) => {
 });
 
 // Serve static files from dist (after API routes, before catch-all)
-app.use(express.static(path.join(__dirname, '../dist')));
+const distPath = path.join(__dirname, '../dist');
+app.use(express.static(distPath));
 
 // Serve React app for all other routes (must be last)
 app.get('*', (_req, res) => {
-  const indexPath = path.join(__dirname, '../dist/index.html');
+  const indexPath = path.join(distPath, 'index.html');
   res.sendFile(indexPath, (err) => {
     if (err) {
       logger.error('Error sending index.html:', err);
