@@ -9,8 +9,8 @@ echo "===================================="
 
 cd /var/www/promohive
 
-# Use the DATABASE_URL from .env
-source .env
+# Export DATABASE_URL directly from .env
+export $(grep -v '^#' .env | xargs)
 
 # Create admin user
 psql "$DATABASE_URL" << 'SQL'
