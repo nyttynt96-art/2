@@ -1963,9 +1963,9 @@ function AdminDashboard() {
         )}
 
         {activeTab === 'usdt' && (
-          <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-              <h3 className="text-lg font-medium">USDT Addresses</h3>
+          <div className="card glass-effect border border-white/20">
+            <div className="px-6 py-4 border-b border-white/20 flex justify-between items-center">
+              <h3 className="text-lg font-medium text-white">USDT Addresses</h3>
               <button onClick={addUSDTAddress} className="btn-primary">
                 Add USDT Address
               </button>
@@ -1973,9 +1973,9 @@ function AdminDashboard() {
             <div className="p-6">
               <div className="space-y-4">
                 {usdtAddresses.map(address => (
-                  <div key={address.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div key={address.id} className="flex items-center justify-between p-4 glass-effect rounded-xl border border-white/20">
                     <div className="flex-1">
-                      <p className="font-mono text-sm font-semibold text-gray-800 mb-2">{address.address}</p>
+                      <p className="font-mono text-sm font-semibold text-white mb-2">{address.address}</p>
                       <div className="flex gap-2">
                         <span className="badge badge-primary">{address.network}</span>
                         <span className={`badge ${address.isActive ? 'badge-success' : 'badge-danger'}`}>
@@ -1986,7 +1986,9 @@ function AdminDashboard() {
                     <div className="flex space-x-2">
                       <button 
                         onClick={() => toggleAddressStatus(address.id)}
-                        className={`px-3 py-1 rounded text-sm ${address.isActive ? 'bg-yellow-500 text-white' : 'bg-green-500 text-white'}`}
+                        className={`px-3 py-1 rounded-lg text-sm font-semibold transition-all duration-300 transform hover:scale-110 ${
+                          address.isActive ? 'bg-yellow-500 hover:bg-yellow-600 text-white' : 'bg-green-500 hover:bg-green-600 text-white'
+                        }`}
                       >
                         {address.isActive ? 'Deactivate' : 'Activate'}
                       </button>
@@ -2033,23 +2035,23 @@ function AdminDashboard() {
               <div className="p-6">
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Platform Name</label>
+                    <label className="block text-sm font-medium text-white mb-2">Platform Name</label>
                     <input type="text" defaultValue="PromoHive" className="form-input" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Welcome Bonus</label>
+                    <label className="block text-sm font-medium text-white mb-2">Welcome Bonus</label>
                     <input type="number" defaultValue="5.00" className="form-input" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Minimum Withdrawal</label>
+                    <label className="block text-sm font-medium text-white mb-2">Minimum Withdrawal</label>
                     <input type="number" defaultValue="10.00" className="form-input" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Max Daily Spins</label>
+                    <label className="block text-sm font-medium text-white mb-2">Max Daily Spins</label>
                     <input type="number" defaultValue="3" className="form-input" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Max Spin Prize</label>
+                    <label className="block text-sm font-medium text-white mb-2">Max Spin Prize</label>
                     <input type="number" defaultValue="0.30" className="form-input" />
                   </div>
                   <button className="btn-success w-full">
@@ -2067,7 +2069,7 @@ function AdminDashboard() {
               <div className="p-6">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Free User Maximum Earnings</label>
+                    <label className="block text-sm font-medium text-white mb-2">Free User Maximum Earnings</label>
                     <div className="flex items-center gap-2">
                       <input 
                         type="number" 
@@ -2098,7 +2100,7 @@ function AdminDashboard() {
               <div className="p-6">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Banner Title</label>
+                    <label className="block text-sm font-medium text-white mb-2">Banner Title</label>
                     <input 
                       type="text" 
                       value={homeBannerSettings.title}
@@ -2108,7 +2110,7 @@ function AdminDashboard() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Banner Subtitle</label>
+                    <label className="block text-sm font-medium text-white mb-2">Banner Subtitle</label>
                     <input 
                       type="text" 
                       value={homeBannerSettings.subtitle}
@@ -2118,7 +2120,7 @@ function AdminDashboard() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Button Text</label>
+                    <label className="block text-sm font-medium text-white mb-2">Button Text</label>
                     <input 
                       type="text" 
                       value={homeBannerSettings.buttonText}
@@ -2128,7 +2130,7 @@ function AdminDashboard() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Bonus Amount</label>
+                    <label className="block text-sm font-medium text-white mb-2">Bonus Amount</label>
                     <input 
                       type="text" 
                       value={homeBannerSettings.bonusAmount}
@@ -2155,7 +2157,7 @@ function AdminDashboard() {
               <div className="p-6">
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">WhatsApp Number</label>
+                    <label className="block text-sm font-medium text-white mb-2">WhatsApp Number</label>
                     <input 
                       type="text" 
                       value={supportSettings.whatsapp}
@@ -2165,7 +2167,7 @@ function AdminDashboard() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Support Email</label>
+                    <label className="block text-sm font-medium text-white mb-2">Support Email</label>
                     <input 
                       type="email" 
                       value={supportSettings.email}
