@@ -12,37 +12,69 @@ async function createUser() {
     const hashed = await bcrypt.hash(password, 12);
     console.log('Password hash:', hashed);
     
-    // Now create user in database
+    // Now create or update user in database
     const { PrismaClient } = require('@prisma/client');
     const prisma = new PrismaClient();
     
-    const user = await prisma.user.create({
-      data: {
-        email: 'test@test.com',
-        username: 'testuser',
-        password: hashed,
-        fullName: 'Test User',
-        role: 'USER',
-        isApproved: true,
-        referralCode: 'TEST123',
-        level: 0,
-      }
+    // Try to find existing user
+    const existingUser = await prisma.user.findUnique({
+      where: { email: 'test@test.com' }
     });
     
-    console.log('User created:', user.id);
+    let user;
     
-    // Create wallet
-    const wallet = await prisma.wallet.create({
-      data: {
-        userId: user.id,
-        balance: 0,
-        pendingBalance: 0,
-        totalEarned: 0,
-        totalWithdrawn: 0,
-      }
+    if (existingUser) {
+      console.log('Updating existing user...');
+      user = await prisma.user.update({
+        where: { email: 'test@test.com' },
+        data: {
+          password: hashed,
+          username: 'testuser',
+          fullName: 'Test User',
+          role: 'USER',
+          isApproved: true,
+          referralCode: 'TEST123',
+          level: 0,
+        }
+      });
+    } else {
+      console.log('Creating new user...');
+      user = await prisma.user.create({
+        data: {
+          email: 'test@test.com',
+          username: 'testuser',
+          password: hashed,
+          fullName: 'Test User',
+          role: 'USER',
+          isApproved: true,
+          referralCode: 'TEST123',
+          level: 0,
+        }
+      });
+    }
+    
+    console.log('User created/updated:', user.id);
+    
+    // Check if wallet exists
+    const existingWallet = await prisma.wallet.findUnique({
+      where: { userId: user.id }
     });
     
-    console.log('Wallet created:', wallet.id);
+    if (!existingWallet) {
+      const wallet = await prisma.wallet.create({
+        data: {
+          userId: user.id,
+          balance: 0,
+          pendingBalance: 0,
+          totalEarned: 0,
+          totalWithdrawn: 0,
+        }
+      });
+      console.log('Wallet created:', wallet.id);
+    } else {
+      console.log('Wallet already exists');
+    }
+    
     await prisma.$disconnect();
   } catch (error) {
     console.error('Error:', error);
@@ -54,4 +86,3 @@ createUser();
 NODE_SCRIPT
 
 echo "Done! Try logging in with test@test.com / test123456"
-
