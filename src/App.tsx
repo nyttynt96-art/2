@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import { Route, Switch } from 'wouter'
-import LevelUpgrade from './pages/LevelUpgrade'
+import HomePage from './pages/Home'
 import LoginPage from './pages/Login'
 import RegisterPage from './pages/Register'
 import DashboardPage from './pages/Dashboard'
 import TasksPage from './pages/Tasks'
 import ReferralsPage from './pages/Referrals'
 import WithdrawalsPage from './pages/Withdrawals'
+import LevelUpgrade from './pages/LevelUpgrade'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import NotFoundPage from './pages/NotFound'
 
@@ -2673,7 +2674,7 @@ function App() {
     <NotificationProvider>
       <AuthProvider>
         <Switch>
-          <Route path="/" component={Home} />
+          <Route path="/" component={HomePage} />
           <Route path="/login" component={LoginPage} />
           <Route path="/register" component={RegisterPage} />
           <Route path="/dashboard" component={DashboardPage} />
