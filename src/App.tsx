@@ -189,8 +189,8 @@ function Home() {
       
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-500 via-red-600 to-orange-700 opacity-90"></div>
-        <div className="absolute inset-0 bg-black opacity-20"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-600 via-purple-600 to-pink-600 opacity-95"></div>
+        <div className="absolute inset-0 bg-black opacity-10"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 text-center">
           <div className="animate-float">
@@ -200,9 +200,9 @@ function Home() {
                 <img 
                   src="/logo.png" 
                   alt="PromoHive Logo" 
-                  className="w-48 md:w-64 h-auto drop-shadow-2xl animate-bounce-slow"
+                  className="w-48 md:w-64 h-auto drop-shadow-2xl animate-bounce-slow border-4 border-white/30 rounded-2xl p-2 bg-white/10"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-black/20 rounded-full blur-2xl"></div>
+                <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-black/20 rounded-2xl blur-2xl"></div>
               </div>
             </div>
             
@@ -224,7 +224,7 @@ function Home() {
               </a>
               <a 
                 href="/login" 
-                className="btn-outline text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-orange-600 transform hover:scale-110 transition-all duration-300"
+                className="btn-outline text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-purple-600 transform hover:scale-110 transition-all duration-300"
               >
                 Login 🔑
               </a>
@@ -255,6 +255,35 @@ function Home() {
             <div className="text-center p-6 bg-white/10 backdrop-blur-lg rounded-xl border border-white/20">
               <div className="text-5xl font-bold text-white mb-2 animate-pulse">$8,521</div>
               <div className="text-white/80 text-sm font-medium">Pending Withdrawals</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Welcome Bonus Banner */}
+      <section className="py-12 bg-gradient-to-r from-green-500 via-emerald-500 to-teal-500 relative overflow-hidden">
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 text-center">
+          <div className="inline-block bg-white/20 backdrop-blur-lg rounded-2xl px-8 py-6 border border-white/30 shadow-2xl">
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3 drop-shadow-lg animate-pulse">
+              🎁 Seize the Opportunity!
+            </h2>
+            <p className="text-xl md:text-2xl text-white mb-4 drop-shadow-md">
+              Sign up for a new account and earn $5 instantly!
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <a 
+                href="/register" 
+                className="btn-primary text-lg px-8 py-4 bg-white text-green-600 hover:bg-gray-100 transform hover:scale-110 transition-all duration-300 shadow-2xl font-bold"
+              >
+                Get Your $5 Bonus 🚀
+              </a>
+              <span className="text-white text-sm opacity-80">
+                Available to all new users
+              </span>
             </div>
           </div>
         </div>
@@ -1440,6 +1469,12 @@ function AdminDashboard() {
   })
   const [freeUserLimit, setFreeUserLimit] = useState(9.90)
   const [showNotifications, setShowNotifications] = useState(false)
+  const [homeBannerSettings, setHomeBannerSettings] = useState({
+    title: '🎁 Seize the Opportunity!',
+    subtitle: 'Sign up for a new account and earn $5 instantly!',
+    buttonText: 'Get Your $5 Bonus 🚀',
+    bonusAmount: '$5'
+  })
 
   if (loading) {
     return (
@@ -1776,20 +1811,20 @@ function AdminDashboard() {
             </div>
             
             {/* Quick Actions */}
-            <div className="card bg-gradient-to-r from-gray-800 to-gray-900 text-white">
-              <h3 className="text-2xl font-bold mb-6">Quick Actions</h3>
+            <div className="glass-effect rounded-xl p-6 shadow-2xl backdrop-blur-xl border border-white/20">
+              <h3 className="text-2xl font-bold mb-6 text-white drop-shadow-lg">Quick Actions</h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <button className="bg-white/10 hover:bg-white/20 p-4 rounded-lg text-left transition-all duration-300 transform hover:scale-105">
+                <button className="glass-effect text-white hover:bg-white/30 p-4 rounded-xl text-left transition-all duration-300 transform hover:scale-105 border border-white/20 shadow-lg">
                   <div className="text-3xl mb-2">✨</div>
                   <div className="font-semibold">Approve Users</div>
                   <div className="text-sm opacity-75">Review pending accounts</div>
                 </button>
-                <button className="bg-white/10 hover:bg-white/20 p-4 rounded-lg text-left transition-all duration-300 transform hover:scale-105">
+                <button className="glass-effect text-white hover:bg-white/30 p-4 rounded-xl text-left transition-all duration-300 transform hover:scale-105 border border-white/20 shadow-lg">
                   <div className="text-3xl mb-2">📊</div>
                   <div className="font-semibold">View Analytics</div>
                   <div className="text-sm opacity-75">Check platform stats</div>
                 </button>
-                <button className="bg-white/10 hover:bg-white/20 p-4 rounded-lg text-left transition-all duration-300 transform hover:scale-105">
+                <button className="glass-effect text-white hover:bg-white/30 p-4 rounded-xl text-left transition-all duration-300 transform hover:scale-105 border border-white/20 shadow-lg">
                   <div className="text-3xl mb-2">⚙️</div>
                   <div className="font-semibold">Manage Settings</div>
                   <div className="text-sm opacity-75">Configure platform</div>
@@ -2049,6 +2084,64 @@ function AdminDashboard() {
                     className="btn-success w-full"
                   >
                     Save Free User Limit
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Home Banner Settings */}
+            <div className="card">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium">Home Page Banner Settings</h3>
+                <p className="text-sm text-gray-500 mt-1">Customize the welcome bonus banner on the home page</p>
+              </div>
+              <div className="p-6">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Banner Title</label>
+                    <input 
+                      type="text" 
+                      value={homeBannerSettings.title}
+                      onChange={(e) => setHomeBannerSettings({...homeBannerSettings, title: e.target.value})}
+                      className="form-input"
+                      placeholder="🎁 Seize the Opportunity!"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Banner Subtitle</label>
+                    <input 
+                      type="text" 
+                      value={homeBannerSettings.subtitle}
+                      onChange={(e) => setHomeBannerSettings({...homeBannerSettings, subtitle: e.target.value})}
+                      className="form-input"
+                      placeholder="Sign up for a new account and earn $5 instantly!"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Button Text</label>
+                    <input 
+                      type="text" 
+                      value={homeBannerSettings.buttonText}
+                      onChange={(e) => setHomeBannerSettings({...homeBannerSettings, buttonText: e.target.value})}
+                      className="form-input"
+                      placeholder="Get Your $5 Bonus 🚀"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Bonus Amount</label>
+                    <input 
+                      type="text" 
+                      value={homeBannerSettings.bonusAmount}
+                      onChange={(e) => setHomeBannerSettings({...homeBannerSettings, bonusAmount: e.target.value})}
+                      className="form-input"
+                      placeholder="$5"
+                    />
+                  </div>
+                  <button 
+                    onClick={() => alert('Home banner settings saved!')}
+                    className="btn-success w-full"
+                  >
+                    Save Banner Settings
                   </button>
                 </div>
               </div>
