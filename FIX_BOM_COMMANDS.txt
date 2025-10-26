@@ -1,0 +1,23 @@
+# الأوامر المباشرة لإصلاح BOM على السيرفر
+
+# نسخ والصق هذه الأوامر مباشرة على السيرفر:
+
+cd /var/www/promohive
+
+# إزالة BOM من App.tsx باستخدام tail
+tail -c +4 src/App.tsx > src/App.tsx.tmp
+mv src/App.tsx.tmp src/App.tsx
+
+# التحقق من BOM (يجب ألا تظهر ef bb bf)
+head -c 3 src/App.tsx | od -An -tx1
+
+# بناء التطبيق
+npm run build
+
+# إعادة تشغيل PM2
+pm2 restart promohive-server
+pm2 save
+
+# عرض السجلات
+pm2 logs promohive-server --lines 30 --nostream
+
