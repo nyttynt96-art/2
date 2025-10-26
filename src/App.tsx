@@ -977,10 +977,10 @@ function LuckWheel() {
   const prizes = [
     { value: 0.02, color: '#FF6B6B', label: '$0.02', weight: 20 }, // Very common
     { value: 0.03, color: '#FF9999', label: '$0.03', weight: 20 },
-    { value: 0.05, color: '#4ECDC4', label: '$0.05', weight: 15 },
-    { value: 0.08, color: '#45B7D1', label: '$0.08', weight: 10 },
+    { value: 0.05, color: '#00E5FF', label: '$0.05', weight: 15 }, // Cyan
+    { value: 0.08, color: '#9333EA', label: '$0.08', weight: 10 }, // Purple
     { value: 0.10, color: '#96CEB4', label: '$0.10', weight: 8 },
-    { value: 0.15, color: '#FFEAA7', label: '$0.15', weight: 5 },
+    { value: 0.15, color: '#EC4899', label: '$0.15', weight: 5 }, // Pink
     { value: 0.20, color: '#DDA0DD', label: '$0.20', weight: 2 },
     { value: 0.30, color: '#FFD700', label: '$0.30', weight: 1 } // Very rare
   ]
@@ -1020,7 +1020,9 @@ function LuckWheel() {
     )
   }
 
-  const handleSpin = () => {
+  const [rotation, setRotation] = useState(0)
+
+  const handleSpinClick = () => {
     if (spinsLeft <= 0) {
       alert('No spins left for today! Come back tomorrow.')
       return
@@ -1028,13 +1030,39 @@ function LuckWheel() {
 
     setIsSpinning(true)
     setResult(null)
+    setRotation(0)
 
-    setTimeout(() => {
-      const randomPrize = getRandomPrize()
-      setResult(randomPrize)
-      setSpinsLeft(spinsLeft - 1)
-      setIsSpinning(false)
-    }, 3000)
+    // Random rotation (multiple full spins + prize angle)
+    const selectedPrize = getRandomPrize()
+    const prizeIndex = prizes.findIndex(p => p.value === selectedPrize.value && p.label === selectedPrize.label)
+    const prizeAngle = prizeIndex * 45
+    
+    // 5-8 full rotations + prize angle
+    const fullRotations = 5 + Math.floor(Math.random() * 3)
+    const totalRotation = fullRotations * 360 + prizeAngle
+    const duration = 3000
+
+    const startTime = Date.now()
+    const animate = () => {
+      const elapsed = Date.now() - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      
+      // Easing function for smooth deceleration
+      const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3)
+      const easedProgress = easeOutCubic(progress)
+      
+      setRotation(totalRotation * easedProgress)
+      
+      if (progress < 1) {
+        requestAnimationFrame(animate)
+      } else {
+        setIsSpinning(false)
+        setResult(selectedPrize)
+        setSpinsLeft(spinsLeft - 1)
+      }
+    }
+    
+    animate()
   }
 
   return (
@@ -1043,7 +1071,7 @@ function LuckWheel() {
       
       <div className="max-w-4xl mx-auto px-4 py-8">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-4">🎰 Luck Wheel</h1>
+          <h1 className="text-4xl font-bold text-white mb-4 animate-pulse">🎰 Luck Wheel</h1>
           <p className="text-xl text-white opacity-90">Spin daily and win up to $0.30!</p>
         </div>
 
@@ -1052,35 +1080,94 @@ function LuckWheel() {
           <div className="card glass-effect">
             <div className="text-center">
               <div className="relative w-80 h-80 mx-auto mb-6">
-                <div className={`w-full h-full rounded-full border-8 border-white ${isSpinning ? 'animate-spin' : ''}`}>
-                  {prizes.map((prize, index) => (
-                    <div
-                      key={index}
-                      className="absolute w-full h-full"
-                      style={{
-                        transform: `rotate(${index * 45}deg)`,
-                        transformOrigin: 'center'
-                      }}
-                    >
-                      <div
-                        className="w-0 h-0 border-l-40 border-r-40 border-b-40 border-l-transparent border-r-transparent"
-                        style={{
-                          borderBottomColor: prize.color,
-                          transform: 'translateX(50%)'
-                        }}
-                      ></div>
-                    </div>
-                  ))}
+                {/* Pointer */}
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-4 z-20">
+                  <div className="w-0 h-0 border-l-8 border-r-8 border-t-16 border-l-transparent border-r-transparent border-t-red-500 animate-bounce"></div>
                 </div>
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-white rounded-full border-4 border-gray-300"></div>
+                
+                {/* Wheel Container */}
+                <div className="w-80 h-80 relative">
+                  {/* Wheel Sectors */}
+                  <svg
+                    width="320"
+                    height="320"
+                    viewBox="0 0 320 320"
+                    className="absolute transform transition-transform duration-100"
+                    style={{ transform: `rotate(${rotation}deg)` }}
+                  >
+                    <defs>
+                      <filter id="glow">
+                        <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                        <feMerge>
+                          <feMergeNode in="coloredBlur"/>
+                          <feMergeNode in="SourceGraphic"/>
+                        </feMerge>
+                      </filter>
+                    </defs>
+                    
+                    {prizes.map((prize, index) => {
+                      const startAngle = (index - 1) * (360 / 8)
+                      const endAngle = index * (360 / 8)
+                      const startAngleRad = (startAngle - 90) * (Math.PI / 180)
+                      const endAngleRad = (endAngle - 90) * (Math.PI / 180)
+                      const x1 = 160 + 140 * Math.cos(startAngleRad)
+                      const y1 = 160 + 140 * Math.sin(startAngleRad)
+                      const x2 = 160 + 140 * Math.cos(endAngleRad)
+                      const y2 = 160 + 140 * Math.sin(endAngleRad)
+                      
+                      return (
+                        <path
+                          key={index}
+                          d={`M 160,160 L ${x1},${y1} A 140,140 0 0,1 ${x2},${y2} Z`}
+                          fill={prize.color}
+                          filter="url(#glow)"
+                          style={{ transition: 'all 0.3s ease' }}
+                        >
+                          <title>{prize.label}</title>
+                        </path>
+                      )
+                    })}
+                    
+                    {/* Center Circle */}
+                    <circle cx="160" cy="160" r="40" fill="white" stroke="#333" strokeWidth="3"/>
+                    <text x="160" y="170" textAnchor="middle" fontSize="16" fontWeight="bold">SPIN</text>
+                  </svg>
+                  
+                  {/* Prize Labels on separate layer */}
+                  <g>
+                    {prizes.map((prize, index) => {
+                      const angle = (index * 45 - 22.5) * (Math.PI / 180)
+                      const x = 160 + 90 * Math.cos(angle)
+                      const y = 160 + 90 * Math.sin(angle)
+                      
+                      return (
+                        <text
+                          key={index}
+                          x={x}
+                          y={y}
+                          textAnchor="middle"
+                          dominantBaseline="middle"
+                          className="text-white font-bold text-sm"
+                          fill="white"
+                          stroke="black"
+                          strokeWidth="0.5"
+                          fontSize="16"
+                          fontWeight="bold"
+                        >
+                          {prize.label}
+                        </text>
+                      )
+                    })}
+                  </g>
+                </div>
               </div>
               
               <button
-                onClick={handleSpin}
+                onClick={handleSpinClick}
                 disabled={isSpinning || spinsLeft <= 0}
-                className={`btn-primary text-xl px-8 py-4 ${(isSpinning || spinsLeft <= 0) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`btn-primary text-xl px-8 py-4 ${(isSpinning || spinsLeft <= 0) ? 'opacity-50 cursor-not-allowed' : 'animate-pulse'}`}
               >
-                {isSpinning ? 'Spinning...' : `Spin Now (${spinsLeft} left)`}
+                {isSpinning ? 'Spinning...' : spinsLeft > 0 ? `🎯 Spin Now (${spinsLeft} left)` : 'No Spins Left'}
               </button>
             </div>
           </div>
@@ -1285,6 +1372,11 @@ function AdminDashboard() {
     { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'USER', isApproved: true, balance: 15.50, level: 1 },
     { id: 3, name: 'Admin User', email: 'admin@promohive.com', role: 'SUPER_ADMIN', isApproved: true, balance: 1000, level: 3 }
   ])
+  const [notifications, setNotifications] = useState([
+    { id: 1, type: 'new_user', message: 'John Doe registered', time: '2 minutes ago', read: false },
+    { id: 2, type: 'withdrawal', message: 'Withdrawal request: $50', time: '15 minutes ago', read: false },
+    { id: 3, type: 'upgrade', message: 'User requested level upgrade', time: '1 hour ago', read: false }
+  ])
   const [usdtAddresses, setUsdtAddresses] = useState([
     { id: 1, address: 'TQn9Y2khEsLJW1ChVWFMSMeRDow5KcbLSE', network: 'TRC20', isActive: true },
     { id: 2, address: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6', network: 'ERC20', isActive: true }
@@ -1299,11 +1391,14 @@ function AdminDashboard() {
   ])
   const [editingAddress, setEditingAddress] = useState(null)
   const [levelModal, setLevelModal] = useState({ show: false, userId: null, currentLevel: 0 })
+  const [taskModal, setTaskModal] = useState({ show: false, task: null })
+  const [userModal, setUserModal] = useState({ show: false, user: null })
   const [supportSettings, setSupportSettings] = useState({
     whatsapp: '+17253348692',
     email: 'promohive@globalpromonetwork.store'
   })
   const [freeUserLimit, setFreeUserLimit] = useState(9.90)
+  const [showNotifications, setShowNotifications] = useState(false)
 
   if (loading) {
     return (
@@ -1470,14 +1565,63 @@ function AdminDashboard() {
     ))
   }
 
+  const unreadCount = notifications.filter(n => !n.read).length
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation user={user} onLogout={logout} />
       
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold gradient-text mb-2">Admin Dashboard</h1>
-          <p className="text-gray-600">Manage your platform</p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-4xl font-bold gradient-text mb-2">Admin Dashboard</h1>
+            <p className="text-gray-600">Manage your platform</p>
+          </div>
+          <div className="relative">
+            <button
+              onClick={() => setShowNotifications(!showNotifications)}
+              className="relative p-3 bg-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110"
+            >
+              <span className="text-2xl">🔔</span>
+              {unreadCount > 0 && (
+                <span className="absolute top-0 right-0 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse">
+                  {unreadCount}
+                </span>
+              )}
+            </button>
+            
+            {showNotifications && (
+              <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-2xl z-50 border-2 border-gray-200">
+                <div className="p-4 border-b border-gray-200 flex justify-between items-center">
+                  <h3 className="font-bold">Notifications</h3>
+                  <button onClick={() => setShowNotifications(false)} className="text-gray-500 hover:text-gray-700">✕</button>
+                </div>
+                <div className="max-h-96 overflow-y-auto">
+                  {notifications.map(notif => (
+                    <div
+                      key={notif.id}
+                      className={`p-4 border-b border-gray-200 hover:bg-gray-50 transition-colors ${
+                        !notif.read ? 'bg-blue-50' : ''
+                      }`}
+                    >
+                      <div className="flex items-start space-x-3">
+                        <div className="text-2xl">
+                          {notif.type === 'new_user' && '👤'}
+                          {notif.type === 'withdrawal' && '💰'}
+                          {notif.type === 'upgrade' && '⭐'}
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-medium text-gray-900">{notif.message}</p>
+                          <p className="text-sm text-gray-500">{notif.time}</p>
+                        </div>
+                        {!notif.read && <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
         
         {/* Admin Tabs */}

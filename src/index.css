@@ -162,6 +162,35 @@ body {
   animation: slide-in 0.3s ease-out;
 }
 
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+}
+
+.modal-content {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  max-width: 32rem;
+    width: 100%;
+  margin: 1rem;
+  padding: 1.5rem;
+}
+
+.modal-overlay-dark {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.modal-content-dark {
+  background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+  color: white;
+}
+
 /* Loading Spinner */
 .spinner {
   @apply animate-spin rounded-full border-4 border-gray-200 border-t-blue-500;
