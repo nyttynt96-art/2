@@ -47,11 +47,17 @@ app.use(cors({
   credentials: true,
 }));
 
-// Rate limiting
+// Rate limiting with proper IP detection for reverse proxy
 const limiter = rateLimit({
   windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS || '900000'), // 15 minutes
   max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS || '100'),
   message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+  keyGenerator: (req) => {
+    // Use X-Forwarded-For header if present (from Nginx), otherwise use direct IP
+    return req.headers['x-forwarded-for']?.toString().split(',')[0] || req.ip || 'unknown';
+  },
 });
 app.use('/api/', limiter);
 
