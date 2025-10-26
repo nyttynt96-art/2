@@ -1,301 +1,224 @@
-# 🚀 PromoHive Deployment Guide - Ubuntu 24.04 LTS
+# 📋 دليل النشر الكامل - Complete Deployment Guide
 
-This guide provides step-by-step instructions to deploy PromoHive on Ubuntu 24.04 LTS VPS.
+## ✅ الإصلاحات المنجزة
 
-## 📋 Prerequisites
+### 1. إصلاح Rate Limiter
+- ✅ استبدال `rateLimit` بـ `keyGenerator` مخصص
+- ✅ استخدام `X-Forwarded-For` من Nginx للـ IP detection
+- ✅ إزالة تحذيرات `ERR_ERL_PERMISSIVE_TRUST_PROXY`
 
-- Ubuntu 24.04 LTS VPS (root access via SSH)
-- Domain: **globalpromonetwork.store** ✅
-- Basic knowledge of Linux commands
+### 2. تحديث Vite Config
+- ✅ إضافة `define` لـ `process.env.NODE_ENV`
+- ✅ إزالة تحذير Vite CJS
 
-## 🔧 Server Setup
+### 3. إصلاح BOM في App.tsx
+- ✅ إزالة Byte Order Mark من الملف
+- ✅ إزالة بيانات Admin Login من صفحة Login
 
-### Step 1: Initial Server Setup
+---
 
-Connect to your server:
-```bash
-ssh root@YOUR_SERVER_IP
-```
+## 🚀 خطوات النشر على السيرفر
 
-Run the server setup script:
-```bash
-bash setup-server.sh
-```
-
-This will install:
-- Node.js 20.x
-- PM2 (Process Manager)
-- PostgreSQL
-- Nginx
-- Git
-- Essential system tools
-
-### Step 2: Configure PostgreSQL
-
-Create database and user:
-```bash
-sudo -u postgres psql
-
-# In PostgreSQL shell:
-CREATE DATABASE promohive;
-CREATE USER promohive_user WITH ENCRYPTED PASSWORD 'your_secure_password';
-GRANT ALL PRIVILEGES ON DATABASE promohive TO promohive_user;
-ALTER USER promohive_user CREATEDB;
-\q
-```
-
-### Step 3: Clone and Configure Repository
-
-```bash
-cd /var/www
-git clone https://github.com/nyttynt96-art/2.git promohive
-cd promohive
-```
-
-### Step 4: Configure Environment Variables
-
-```bash
-cp env.example .env
-nano .env
-```
-
-Update the following variables:
-```env
-# Database
-DATABASE_URL="postgresql://promohive_user:your_secure_password@localhost:5432/promohive?schema=public"
-
-# Server
-PORT=3002
-NODE_ENV=production
-
-# JWT Secret
-JWT_SECRET="your_secure_random_secret_key"
-
-# CORS
-CORS_ORIGIN="https://globalpromonetwork.store"
-
-# Email (Configure with your SMTP)
-SMTP_HOST="smtp.gmail.com"
-SMTP_PORT=587
-SMTP_USER="your_email@gmail.com"
-SMTP_PASS="your_email_password"
-SMTP_FROM="PromoHive <noreply@your-domain.com>"
-```
-
-### Step 5: Run Database Migrations
-
-```bash
-npm install
-npx prisma generate
-npx prisma migrate deploy
-```
-
-### Step 6: Build Application
-
-```bash
-npm run build
-```
-
-### Step 7: Start with PM2
-
-```bash
-pm2 start ecosystem.config.js
-pm2 save
-pm2 startup
-```
-
-### Step 8: Configure Nginx
-
-Create Nginx configuration:
-```bash
-sudo nano /etc/nginx/sites-available/promohive
-```
-
-Add the following (for HTTPS with SSL):
-```nginx
-server {
-    listen 80;
-    listen [::]:80;
-    server_name globalpromonetwork.store www.globalpromonetwork.store;
-
-    # Redirect HTTP to HTTPS
-    location / {
-        return 301 https://$server_name$request_uri;
-    }
-}
-
-server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-    server_name globalpromonetwork.store www.globalpromonetwork.store;
-
-    # SSL certificates (will be added by Certbot)
-    ssl_certificate /etc/letsencrypt/live/globalpromonetwork.store/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/globalpromonetwork.store/privkey.pem;
-
-    # Security headers
-    add_header X-Frame-Options "SAMEORIGIN" always;
-    add_header X-Content-Type-Options "nosniff" always;
-    add_header X-XSS-Protection "1; mode=block" always;
-    add_header Strict-Transport-Security "max-age=31536000; includeSubDomains" always;
-
-    client_max_body_size 10M;
-
-    client_max_body_size 10M;
-
-    location / {
-        proxy_pass http://localhost:3002;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-}
-```
-
-Enable the site:
-```bash
-sudo ln -s /etc/nginx/sites-available/promohive /etc/nginx/sites-enabled/
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-### Step 9: Setup SSL (Optional but Recommended)
-
-Install Certbot:
-```bash
-sudo apt-get install certbot python3-certbot-nginx -y
-```
-
-Obtain SSL certificate:
-```bash
-sudo certbot --nginx -d globalpromonetwork.store -d www.globalpromonetwork.store
-```
-
-## 🔄 Updating the Application
-
-When you push new code to GitHub:
+### الخطوة 1: إصلاح مشكلة BOM
 
 ```bash
 cd /var/www/promohive
+
+# استعادة الملف من Git
+git checkout src/App.tsx
+
+# إزالة BOM باستخدام awk (الطريقة الصحيحة)
+awk 'NR==1{sub(/^\xef\xbb\xbf/,"")}{print}' src/App.tsx > src/App.tsx.tmp
+mv src/App.tsx.tmp src/App.tsx
+
+# التحقق من بداية الملف (يجب أن تظهر: import)
+head -c 10 src/App.tsx
+
+# يجب أن تظهر النتيجة: import Rea
+```
+
+### الخطوة 2: سحب التحديثات وبناء التطبيق
+
+```bash
+# سحب آخر التحديثات
 git pull origin main
-npm install
-npx prisma generate
+
+# بناء التطبيق
 npm run build
-pm2 restart ecosystem.config.js
+
+# التحقق من نجاح البناء
+if [ $? -eq 0 ]; then
+    echo "✅ البناء نجح"
+else
+    echo "❌ البناء فشل - راجع الأخطاء أعلاه"
+    exit 1
+fi
 ```
 
-Or use the automated deployment script:
+### الخطوة 3: إعادة تشغيل PM2
+
 ```bash
-bash deploy.sh
+# إعادة تشغيل التطبيق
+pm2 restart promohive-server
+
+# حفظ حالة PM2
+pm2 save
 ```
 
-## 📊 Monitoring
+### الخطوة 4: التحقق من السجلات
 
-Check application status:
 ```bash
+# عرض آخر 50 سطر من السجلات
+pm2 logs promohive-server --lines 50 --nostream
+
+# يجب ألا تظهر:
+# - أخطاء ERR_ERL_PERMISSIVE_TRUST_PROXY
+# - أخطاء BOM
+# - أخطاء بناء
+```
+
+---
+
+## 📝 السكريبت الموجود في المستودع
+
+يمكنك استخدام السكريبت التالي من المستودع:
+
+```bash
+cd /var/www/promohive
+
+# سحب السكريبت
+git pull origin main
+
+# تشغيل السكريبت
+chmod +x RESTORE_AND_FIX_BOM.sh
+./RESTORE_AND_FIX_BOM.sh
+```
+
+---
+
+## ⚙️ التحقق من الإعدادات
+
+### 1. ملف .env
+
+```bash
+# تحقق من ملف .env على السيرفر
+cat .env | grep -E "DATABASE_URL|JWT_SECRET|NODE_ENV"
+```
+
+### 2. Nginx Configuration
+
+```bash
+# تحقق من تكوين Nginx
+sudo cat /etc/nginx/sites-available/promohive.conf
+```
+
+يجب أن يحتوي على:
+```nginx
+proxy_set_header X-Real-IP $remote_addr;
+proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+proxy_set_header X-Forwarded-Proto $scheme;
+```
+
+### 3. PM2 Status
+
+```bash
+# التحقق من حالة PM2
 pm2 status
-pm2 logs promohive-server
+
+# عرض استخدام الموارد
 pm2 monit
 ```
 
-Check Nginx:
+---
+
+## 🐛 حل المشاكل الشائعة
+
+### مشكلة 1: لا تزال أخطاء Rate Limiter تظهر
+
 ```bash
-sudo systemctl status nginx
-sudo tail -f /var/log/nginx/error.log
-```
-
-Check PostgreSQL:
-```bash
-sudo systemctl status postgresql
-```
-
-## 🛠️ Useful Commands
-
-### PM2 Commands
-```bash
-pm2 restart all          # Restart all applications
-pm2 stop all            # Stop all applications
-pm2 logs                # View logs
-pm2 monit               # Monitor resources
-pm2 delete all          # Delete all applications
-```
-
-### Database Commands
-```bash
-npm run prisma:studio   # Open Prisma Studio
-npm run prisma:seed     # Seed database
-```
-
-### Nginx Commands
-```bash
-sudo systemctl reload nginx     # Reload config
-sudo systemctl restart nginx    # Restart Nginx
-sudo nginx -t                   # Test config
-```
-
-## 🔒 Security Checklist
-
-1. **Firewall Configuration**
-   ```bash
-   sudo ufw status
-   sudo ufw allow 'Nginx Full'
-   ```
-
-2. **Keep Software Updated**
-   ```bash
-   sudo apt update && sudo apt upgrade -y
-   ```
-
-3. **Regular Backups**
-   - Set up automated database backups
-   - Keep backup copies of `.env` file
-
-## 📞 Troubleshooting
-
-### Application Not Starting
-```bash
-pm2 logs promohive-server
+# تأكد من تحديث src/index.ts على السيرفر
+git pull origin main
+npm run build
 pm2 restart promohive-server
 ```
 
-### Database Connection Issues
+### مشكلة 2: BOM لا يزال موجود
+
 ```bash
-sudo systemctl status postgresql
-sudo -u postgres psql -c "\l"
+# استخدم الطريقة التالية
+git checkout src/App.tsx
+awk 'NR==1{sub(/^\xef\xbb\xbf/,"")}{print}' src/App.tsx > src/App.tsx.tmp
+mv src/App.tsx.tmp src/App.tsx
+npm run build
 ```
 
-### Port Already in Use
+### مشكلة 3: البناء يفشل
+
 ```bash
-sudo lsof -i :3002
-sudo kill -9 <PID>
+# مسح node_modules وإعادة التثبيت
+rm -rf node_modules dist
+npm install
+npm run build
 ```
 
-### Nginx 502 Error
-- Check if application is running: `pm2 status`
-- Check application logs: `pm2 logs`
-- Verify proxy configuration in Nginx
+---
 
-## 🌐 Access Your Application
+## 📊 التحقق النهائي
 
-- **Main**: https://globalpromonetwork.store
-- **WWW**: https://www.globalpromonetwork.store
-- **Dashboard**: https://globalpromonetwork.store/dashboard
-- **Admin Panel**: https://globalpromonetwork.store/admin
+بعد التنفيذ، تحقق من:
 
-## 📝 Notes
+```bash
+# 1. التطبيق يعمل
+curl https://globalpromonetwork.store/health
 
-- Default admin credentials are set in database seed
-- Change JWT_SECRET to a secure random string
-- Configure email SMTP settings for notifications
-- Set up automated backups for production
-- Monitor logs regularly for any issues
+# 2. PM2 بدون أخطاء
+pm2 logs promohive-server --lines 20 --nostream | grep -i error
 
-## ✅ Deployment Complete!
+# 3. البناء ناجح
+ls -lh dist/assets/
 
-Your PromoHive application is now deployed and running on Ubuntu 24.04 LTS!
+# 4. قاعدة البيانات متصلة
+pm2 logs promohive-server --lines 10 | grep -i database
+```
 
+---
+
+## ✅ قائمة التحقق النهائية
+
+- [ ] إزالة BOM من App.tsx
+- [ ] البناء نجح بدون أخطاء
+- [ ] لا توجد أخطاء في PM2 logs
+- [ ] Rate Limiter يعمل بدون تحذيرات
+- [ ] الموقع يعمل بشكل طبيعي
+- [ ] قاعدة البيانات متصلة
+- [ ] API endpoints تعمل
+
+---
+
+## 📞 في حالة وجود مشاكل
+
+إذا واجهت مشاكل:
+
+1. **تحقق من السجلات:**
+   ```bash
+   pm2 logs promohive-server --lines 100
+   ```
+
+2. **تحقق من Git:**
+   ```bash
+   git log --oneline -5
+   git status
+   ```
+
+3. **إعادة تعيين كاملة:**
+   ```bash
+   cd /var/www/promohive
+   git reset --hard origin/main
+   npm install
+   npm run build
+   pm2 restart promohive-server
+   ```
+
+---
+
+✅ **تم رفع جميع الإصلاحات على GitHub!**
