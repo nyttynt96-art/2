@@ -56,10 +56,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
-// Serve static files from dist (must be before routes)
-app.use(express.static(path.join(__dirname, '../dist')));
-
-// API routes
+// API routes (must be before static files for /api/*)
 app.use('/api/auth', authRoutes);
 app.use('/api/user', authMiddleware, userRoutes);
 app.use('/api/tasks', authMiddleware, tasksRoutes);
@@ -77,6 +74,9 @@ app.get('/health', (_req, res) => {
     version: process.env.npm_package_version || '1.0.0'
   });
 });
+
+// Serve static files from dist (after API routes, before catch-all)
+app.use(express.static(path.join(__dirname, '../dist')));
 
 // Serve React app for all other routes (must be last)
 app.get('*', (_req, res) => {
