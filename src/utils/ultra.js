@@ -350,9 +350,9 @@ class UltraAnimations {
     
     // Update quantum interface
     const quantumInterfaces = document.querySelectorAll('.quantum-interface');
-    quantumInterfaces.forEach(interface => {
+    quantumInterfaces.forEach(element => {
       const time = Date.now() * 0.001;
-      interface.style.setProperty('--time', time);
+      element.style.setProperty('--time', time);
     });
     
     // Update cyberpunk neon
