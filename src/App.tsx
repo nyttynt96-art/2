@@ -2204,10 +2204,22 @@ function Tasks() {
 // Referrals component
 function Referrals() {
   const { user, logout, loading } = React.useContext(AuthContext)
-  const [referralCode] = useState('PH' + Math.random().toString(36).substr(2, 8).toUpperCase())
+  const [referralCode] = useState('PHJXGSWVLH')
+  // Updated referral system with new rewards structure
+  const referralRewards = {
+    L0: { invite: 5, earn: 3.00, upgradeCost: 50 },      // Free: Invite 5 → Earn $3, Upgrade to L1 costs $50
+    L1: { invite: 5, earn: 80.00, upgradeCost: 100 },    // L1: Invite 5 → Earn $80, Upgrade to L2 costs $100  
+    L2: { invite: 5, earn: 160.00, upgradeCost: 200 },   // L2: Invite 5 → Earn $160, Upgrade to L3 costs $200
+    L3: { invite: 5, earn: 320.00, upgradeCost: 400 },    // L3: Invite 5 → Earn $320, Upgrade to L4 costs $400
+    L4: { invite: 5, earn: 640.00 }                       // Max Level: Invite 5 → Earn $640
+  }
+  
   const [referrals] = useState([
-    { id: 1, name: 'John Doe', email: 'john@example.com', level: 1, earnings: 2.50, status: 'active' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', level: 2, earnings: 1.25, status: 'active' }
+    { id: 1, name: 'Sarah Johnson', email: 'sarah.j@email.com', level: 0, status: 'active', joined: '2024-01-15', earnings: 0.00, pendingEarnings: 3.00 },
+    { id: 2, name: 'Michael Chen', email: 'michael.c@email.com', level: 1, status: 'active', joined: '2024-01-20', earnings: 80.00, pendingEarnings: 0.00 },
+    { id: 3, name: 'Emily Rodriguez', email: 'emily.r@email.com', level: 0, status: 'pending', joined: '2024-01-22', earnings: 0.00, pendingEarnings: 3.00 },
+    { id: 4, name: 'David Kumar', email: 'david.k@email.com', level: 2, status: 'active', joined: '2024-01-18', earnings: 160.00, pendingEarnings: 0.00 },
+    { id: 5, name: 'Lisa Park', email: 'lisa.p@email.com', level: 0, status: 'active', joined: '2024-01-25', earnings: 0.00, pendingEarnings: 0.00 }
   ])
 
   if (loading) {
@@ -2261,20 +2273,48 @@ function Referrals() {
           </div>
           
           <div className="card">
-            <h3 className="text-2xl font-semibold mb-6 gradient-text">Referral Rewards</h3>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
-                <span className="font-semibold">Level 1 Referral</span>
-                <span className="text-2xl font-bold text-blue-600">$2.50</span>
+            <h3 className="text-2xl font-semibold mb-6 gradient-text">Referral System</h3>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
+                <div>
+                  <span className="font-semibold text-green-700">Level 0 (Free)</span>
+                  <p className="text-xs text-green-600">Invite 5 friends → Earn $3</p>
+                </div>
+                <span className="text-2xl font-bold text-green-600">$3.00</span>
               </div>
-              <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
-                <span className="font-semibold">Level 2 Referral</span>
-                <span className="text-2xl font-bold text-green-600">$1.25</span>
+              <div className="flex justify-between items-center p-4 bg-gradient-to-r from-blue-50 to-cyan-50 rounded-lg border border-blue-200">
+                <div>
+                  <span className="font-semibold text-blue-700">Level 1 ($50)</span>
+                  <p className="text-xs text-blue-600">Invite 5 friends → Earn $80</p>
+                </div>
+                <span className="text-2xl font-bold text-blue-600">$80.00</span>
               </div>
-              <div className="flex justify-between items-center p-4 bg-purple-50 rounded-lg">
-                <span className="font-semibold">Level 3 Referral</span>
-                <span className="text-2xl font-bold text-purple-600">$0.75</span>
+              <div className="flex justify-between items-center p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-200">
+                <div>
+                  <span className="font-semibold text-purple-700">Level 2 ($100)</span>
+                  <p className="text-xs text-purple-600">Invite 5 friends → Earn $160</p>
+                </div>
+                <span className="text-2xl font-bold text-purple-600">$160.00</span>
               </div>
+              <div className="flex justify-between items-center p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-lg border border-yellow-200">
+                <div>
+                  <span className="font-semibold text-orange-700">Level 3 ($200)</span>
+                  <p className="text-xs text-orange-600">Invite 5 friends → Earn $320</p>
+                </div>
+                <span className="text-2xl font-bold text-orange-600">$320.00</span>
+              </div>
+              <div className="flex justify-between items-center p-4 bg-gradient-to-r from-indigo-50 to-violet-50 rounded-lg border border-indigo-200">
+                <div>
+                  <span className="font-semibold text-indigo-700">Level 4 ($400)</span>
+                  <p className="text-xs text-indigo-600">Invite 5 friends → Earn $640</p>
+                </div>
+                <span className="text-2xl font-bold text-indigo-600">$640.00</span>
+              </div>
+            </div>
+            <div className="mt-4 p-3 bg-yellow-50 border border-yellow-300 rounded-lg">
+              <p className="text-xs text-yellow-800 text-center">
+                <strong>Note:</strong> Friends must be at your level or higher to count as referrals
+              </p>
             </div>
           </div>
         </div>
@@ -2288,21 +2328,34 @@ function Referrals() {
                   <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                   <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                   <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Level</th>
-                  <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Earnings</th>
+                  <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Earned</th>
+                  <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Pending</th>
+                  <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
                   <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {referrals.map(referral => (
-                  <tr key={referral.id} className="table-row">
+                  <tr key={referral.id} className="table-row hover:bg-gray-50 transition-colors">
                     <td className="table-cell font-medium text-gray-900">{referral.name}</td>
                     <td className="table-cell text-gray-500">{referral.email}</td>
                     <td className="table-cell">
-                      <span className="badge badge-primary">L{referral.level}</span>
+                      <span className={`badge ${
+                        referral.level === 0 ? 'badge-success' :
+                        referral.level === 1 ? 'badge-primary' :
+                        referral.level === 2 ? 'badge-secondary' :
+                        'badge-warning'
+                      }`}>
+                        L{referral.level}
+                      </span>
                     </td>
-                    <td className="table-cell text-green-600 font-semibold">${referral.earnings}</td>
+                    <td className="table-cell text-green-600 font-semibold">${referral.earnings.toFixed(2)}</td>
+                    <td className="table-cell text-yellow-600 font-semibold">${referral.pendingEarnings.toFixed(2)}</td>
+                    <td className="table-cell text-gray-500">{referral.joined}</td>
                     <td className="table-cell">
-                      <span className="badge badge-success">{referral.status}</span>
+                      <span className={`badge ${referral.status === 'active' ? 'badge-success' : referral.status === 'pending' ? 'badge-warning' : 'badge-danger'}`}>
+                        {referral.status}
+                      </span>
                     </td>
                   </tr>
                 ))}
