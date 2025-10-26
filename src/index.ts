@@ -25,7 +25,8 @@ const app = express();
 const PORT = process.env.PORT || 3002;
 
 // Trust proxy (for Nginx reverse proxy)
-app.set('trust proxy', true);
+// Only trust the first proxy (more secure than true)
+app.set('trust proxy', 1);
 
 // Security middleware
 app.use(helmet({
