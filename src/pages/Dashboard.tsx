@@ -24,6 +24,20 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
+// Logo Component
+const LogoIcon = ({ size = 40 }: { size?: number }) => (
+  <div 
+    className="rounded-lg flex items-center justify-center font-bold text-white shadow-lg float-animation"
+    style={{
+      width: size,
+      height: size,
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    }}
+  >
+    <span style={{ fontSize: size * 0.5 }}>P</span>
+  </div>
+);
+
 interface DashboardData {
   user: {
     id: string;
@@ -161,7 +175,7 @@ export default function Dashboard() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3 hover-lift">
-              <img src="/logo.png" onError={(e) => { (e.target as HTMLImageElement).src = '/promohive-logo.png'; }} alt="PromoHive" className="h-10 w-10 float-animation brightness-110" />
+              <LogoIcon size={40} />
               <div>
                 <h1 className="text-2xl font-bold text-white font-display drop-shadow-lg">PromoHive</h1>
                 <p className="text-sm text-slate-300">Welcome back, {user.fullName}!</p>
