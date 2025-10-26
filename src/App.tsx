@@ -4,9 +4,6 @@ import Dashboard from './pages/Dashboard'
 import Tasks from './pages/Tasks'
 import Referrals from './pages/Referrals'
 import Withdrawals from './pages/Withdrawals'
-import Profile from './pages/Profile'
-import LuckWheel from './pages/LuckWheel'
-import MiningContracts from './pages/MiningContracts'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import NotFound from './pages/NotFound'
 
@@ -692,9 +689,6 @@ function App() {
           <Route path="/tasks" component={Tasks} />
           <Route path="/referrals" component={Referrals} />
           <Route path="/withdrawals" component={Withdrawals} />
-          <Route path="/profile" component={Profile} />
-          <Route path="/luck-wheel" component={LuckWheel} />
-          <Route path="/mining" component={MiningContracts} />
           <Route path="/admin" component={AdminDashboard} />
           <Route component={NotFound} />
         </Switch>
