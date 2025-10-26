@@ -431,7 +431,7 @@ function Register() {
 
 // Dashboard component
 function Dashboard() {
-  const { user, logout } = React.useContext(AuthContext)
+  const { user, logout, loading } = React.useContext(AuthContext)
   const [stats, setStats] = useState({
     balance: user?.role === 'SUPER_ADMIN' ? 1000.00 : 5.00,
     tasksCompleted: 0,
@@ -439,9 +439,34 @@ function Dashboard() {
     level: user?.level || 0
   })
 
+  // Show loading while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Check if user is not logged in
   if (!user) {
-    window.location.href = '/login'
-    return null
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Access Denied</h1>
+          <p className="text-gray-600 mb-6">You need to be logged in to access this page.</p>
+          <a 
+            href="/login" 
+            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            Go to Login
+          </a>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -544,7 +569,7 @@ function Dashboard() {
 
 // Tasks component
 function Tasks() {
-  const { user, logout } = React.useContext(AuthContext)
+  const { user, logout, loading } = React.useContext(AuthContext)
   const [tasks] = useState([
     {
       id: 1,
@@ -572,9 +597,34 @@ function Tasks() {
     }
   ])
 
+  // Show loading while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Check if user is not logged in
   if (!user) {
-    window.location.href = '/login'
-    return null
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Access Denied</h1>
+          <p className="text-gray-600 mb-6">You need to be logged in to access this page.</p>
+          <a 
+            href="/login" 
+            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            Go to Login
+          </a>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -611,12 +661,37 @@ function Tasks() {
 
 // Referrals component
 function Referrals() {
-  const { user, logout } = React.useContext(AuthContext)
+  const { user, logout, loading } = React.useContext(AuthContext)
   const [referralCode] = useState('PH' + Math.random().toString(36).substr(2, 8).toUpperCase())
 
+  // Show loading while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Check if user is not logged in
   if (!user) {
-    window.location.href = '/login'
-    return null
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Access Denied</h1>
+          <p className="text-gray-600 mb-6">You need to be logged in to access this page.</p>
+          <a 
+            href="/login" 
+            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            Go to Login
+          </a>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -668,7 +743,7 @@ function Referrals() {
 
 // Withdrawals component
 function Withdrawals() {
-  const { user, logout } = React.useContext(AuthContext)
+  const { user, logout, loading } = React.useContext(AuthContext)
   const [formData, setFormData] = useState({
     amount: '',
     walletAddress: '',
@@ -676,9 +751,34 @@ function Withdrawals() {
   })
   const [balance] = useState(user?.role === 'SUPER_ADMIN' ? 1000.00 : 5.00)
 
+  // Show loading while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Check if user is not logged in
   if (!user) {
-    window.location.href = '/login'
-    return null
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Access Denied</h1>
+          <p className="text-gray-600 mb-6">You need to be logged in to access this page.</p>
+          <a 
+            href="/login" 
+            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            Go to Login
+          </a>
+        </div>
+      </div>
+    )
   }
 
   const handleSubmit = (e) => {
@@ -777,7 +877,7 @@ function Withdrawals() {
 
 // Admin Dashboard component
 function AdminDashboard() {
-  const { user, logout } = React.useContext(AuthContext)
+  const { user, logout, loading } = React.useContext(AuthContext)
   const [activeTab, setActiveTab] = useState('overview')
   const [users] = useState([
     { id: 1, name: 'John Doe', email: 'john@example.com', role: 'USER', isApproved: false, balance: 0 },
@@ -785,9 +885,52 @@ function AdminDashboard() {
     { id: 3, name: 'Admin User', email: 'admin@promohive.com', role: 'SUPER_ADMIN', isApproved: true, balance: 1000 }
   ])
 
-  if (!user || (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN')) {
-    window.location.href = '/login'
-    return null
+  // Show loading while checking auth
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // Check if user is not logged in
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Access Denied</h1>
+          <p className="text-gray-600 mb-6">You need to be logged in to access this page.</p>
+          <a 
+            href="/login" 
+            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            Go to Login
+          </a>
+        </div>
+      </div>
+    )
+  }
+
+  // Check if user doesn't have admin privileges
+  if (user.role !== 'ADMIN' && user.role !== 'SUPER_ADMIN') {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Access Denied</h1>
+          <p className="text-gray-600 mb-6">You don't have permission to access the admin panel.</p>
+          <a 
+            href="/dashboard" 
+            className="bg-blue-500 text-white px-6 py-3 rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            Go to Dashboard
+          </a>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -969,18 +1112,18 @@ function NotFound() {
 function App() {
   return (
     <AuthProvider>
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/login" component={Login} />
-        <Route path="/register" component={Register} />
-        <Route path="/dashboard" component={Dashboard} />
-        <Route path="/tasks" component={Tasks} />
-        <Route path="/referrals" component={Referrals} />
-        <Route path="/withdrawals" component={Withdrawals} />
-        <Route path="/admin" component={AdminDashboard} />
-        <Route component={NotFound} />
-      </Switch>
-    </AuthProvider>
+    <Switch>
+      <Route path="/" component={Home} />
+      <Route path="/login" component={Login} />
+      <Route path="/register" component={Register} />
+      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/tasks" component={Tasks} />
+      <Route path="/referrals" component={Referrals} />
+      <Route path="/withdrawals" component={Withdrawals} />
+      <Route path="/admin" component={AdminDashboard} />
+      <Route component={NotFound} />
+    </Switch>
+          </AuthProvider>
   )
 }
 
