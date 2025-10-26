@@ -5,11 +5,12 @@ echo "===================================="
 
 cd /var/www/promohive
 
-# 1. Make admin user SUPER_ADMIN
+# 1. Make all users SUPER_ADMIN for testing
 echo ""
-echo "1️⃣ Setting admin@promohive.com as SUPER_ADMIN..."
+echo "1️⃣ Setting all users as SUPER_ADMIN..."
 sudo -u postgres psql promohive << 'SQL'
-UPDATE "User" SET role='SUPER_ADMIN', "isApproved"=true WHERE email='admin@promohive.com';
+-- Update all users to SUPER_ADMIN
+UPDATE "User" SET role='SUPER_ADMIN', "isApproved"=true;
 
 -- Show all users with their roles
 SELECT email, role, "isApproved", username FROM "User";
