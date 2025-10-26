@@ -1,44 +1,284 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Simple custom styles */
-body {
+/* Custom CSS Variables */
+:root {
+  --primary-blue: #3B82F6;
+  --primary-pink: #EC4899;
+  --primary-purple: #8B5CF6;
+  --primary-green: #10B981;
+  --primary-orange: #F59E0B;
+  --primary-red: #EF4444;
+  --dark-bg: #0F172A;
+  --dark-card: #1E293B;
+  --dark-border: #334155;
+}
+
+/* Base Styles */
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Custom Components */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Custom button styles */
+.gradient-text {
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, var(--primary-blue), var(--primary-pink));
+}
+
+.gradient-bg-secondary {
+  background: linear-gradient(135deg, var(--primary-purple), var(--primary-orange));
+}
+
+.gradient-bg-success {
+  background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+}
+
+/* Card Styles */
+.card {
+  @apply bg-white rounded-xl shadow-lg p-6 border border-gray-100;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  @apply shadow-xl transform -translate-y-1;
+}
+
+.card-dark {
+  @apply bg-gray-800 border-gray-700 text-white;
+}
+
+/* Button Styles */
 .btn-primary {
-  @apply bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors;
+  @apply bg-gradient-to-r from-blue-500 to-pink-500 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg;
 }
 
 .btn-secondary {
-  @apply bg-pink-500 text-white px-4 py-2 rounded hover:bg-pink-600 transition-colors;
+  @apply bg-gradient-to-r from-purple-500 to-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 shadow-lg;
 }
 
-/* Card styles */
-.card {
-  @apply bg-white rounded-lg shadow-md p-6;
+.btn-success {
+  @apply bg-gradient-to-r from-green-500 to-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-600 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 shadow-lg;
 }
 
-/* Form styles */
+.btn-danger {
+  @apply bg-gradient-to-r from-red-500 to-pink-500 text-white px-6 py-3 rounded-lg font-semibold hover:from-red-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg;
+}
+
+.btn-outline {
+  @apply border-2 border-blue-500 text-blue-500 px-6 py-3 rounded-lg font-semibold hover:bg-blue-500 hover:text-white transition-all duration-300;
+}
+
+/* Form Styles */
 .form-input {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent;
+  @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300;
 }
 
-/* Responsive design */
+.form-input:focus {
+  @apply shadow-lg transform scale-105;
+}
+
+.form-select {
+  @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300;
+}
+
+/* Animation Classes */
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-slow {
+  animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-bounce-slow {
+  animation: bounce 2s infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* Loading Spinner */
+.spinner {
+  @apply animate-spin rounded-full border-4 border-gray-200 border-t-blue-500;
+}
+
+/* Progress Bar */
+.progress-bar {
+  @apply w-full bg-gray-200 rounded-full h-2.5;
+}
+
+.progress-fill {
+  @apply bg-gradient-to-r from-blue-500 to-pink-500 h-2.5 rounded-full transition-all duration-500;
+}
+
+/* Badge Styles */
+.badge {
+  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+}
+
+.badge-primary {
+  @apply bg-blue-100 text-blue-800;
+}
+
+.badge-success {
+  @apply bg-green-100 text-green-800;
+}
+
+.badge-warning {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+.badge-danger {
+  @apply bg-red-100 text-red-800;
+}
+
+.badge-purple {
+  @apply bg-purple-100 text-purple-800;
+}
+
+/* Table Styles */
+.table {
+  @apply min-w-full divide-y divide-gray-200;
+}
+
+.table-header {
+  @apply bg-gray-50;
+}
+
+.table-row {
+  @apply hover:bg-gray-50 transition-colors duration-200;
+}
+
+.table-cell {
+  @apply px-6 py-4 whitespace-nowrap text-sm;
+}
+
+/* Modal Styles */
+.modal-overlay {
+  @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.modal-content {
+  @apply bg-white rounded-xl shadow-2xl max-w-md w-full mx-4 p-6;
+}
+
+/* Navigation Styles */
+.nav-link {
+  @apply text-gray-700 hover:text-blue-500 transition-colors duration-200 font-medium;
+}
+
+.nav-link.active {
+  @apply text-blue-500 font-semibold;
+}
+
+/* Stats Card */
+.stats-card {
+  @apply bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1;
+}
+
+.stats-icon {
+  @apply w-12 h-12 rounded-full flex items-center justify-center text-2xl;
+}
+
+.stats-value {
+  @apply text-3xl font-bold;
+}
+
+.stats-label {
+  @apply text-sm font-medium text-gray-500;
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
   .card {
     @apply p-4;
   }
+  
+  .btn-primary, .btn-secondary, .btn-success, .btn-danger {
+    @apply px-4 py-2 text-sm;
+  }
+  
+  .stats-card {
+    @apply p-4;
+  }
 }
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .card {
+    @apply bg-gray-800 border-gray-700 text-white;
+  }
+  
+  .form-input, .form-select {
+    @apply bg-gray-700 border-gray-600 text-white;
+  }
+  
+  .table-header {
+    @apply bg-gray-800;
+  }
+  
+  .table-row {
+    @apply hover:bg-gray-700;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-400 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-500;
+}
+
+/* Utility Classes */
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.backdrop-blur {
+  backdrop-filter: blur(10px);
+}
+
+/* Animation Delays */
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+.delay-500 { animation-delay: 0.5s; }
