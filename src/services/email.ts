@@ -2,11 +2,11 @@ import nodemailer from 'nodemailer';
 import { logger } from './logger';
 
 const transporter = nodemailer.createTransporter({
-  host: process.env.SMTP_HOST,
-  port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: process.env.SMTP_SECURE === 'true',
+  host: process.env.SMTP_HOST || 'smtp.hostinger.com',
+  port: parseInt(process.env.SMTP_PORT || '465'),
+  secure: process.env.SMTP_SECURE !== 'false', // SSL/TLS enabled by default
   auth: {
-    user: process.env.SMTP_USER,
+    user: process.env.SMTP_USER || 'promohive@globalpromonetwork.store',
     pass: process.env.SMTP_PASS,
   },
 });
@@ -179,6 +179,220 @@ export const sendMagicLinkEmail = async (email: string, fullName: string, magicL
     logger.info(`Magic link email sent to ${email}`);
   } catch (error) {
     logger.error('Failed to send magic link email:', error);
+    throw error;
+  }
+};
+
+// Withdrawal Request Email
+export const sendWithdrawalRequestEmail = async (email: string, fullName: string, amount: number) => {
+  try {
+    const mailOptions = {
+      from: process.env.SMTP_FROM || 'promohive@globalpromonetwork.store',
+      to: email,
+      subject: '💰 Withdrawal Request Received - PromoHive',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #00E5FF 0%, #9333EA 50%, #EC4899 100%); color: white;">
+            <h1 style="margin: 0; font-size: 28px;">💰 Withdrawal Request</h1>
+            <p style="margin: 10px 0 0 0; font-size: 16px;">PromoHive</p>
+          </div>
+          
+          <div style="padding: 30px; background: #f8f9fa;">
+            <h2 style="color: #333; margin-bottom: 20px;">Hello ${fullName}!</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Your withdrawal request has been received and is under review by our admin team.
+            </p>
+            
+            <div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 20px; margin: 20px 0;">
+              <h3 style="color: #856404; margin: 0 0 10px 0;">⏳ Pending Approval</h3>
+              <p style="color: #856404; margin: 0; line-height: 1.5;">
+                <strong>Amount:</strong> $${amount.toFixed(2)}<br>
+                <strong>Status:</strong> Pending approval<br>
+                You will receive a notification email once your withdrawal is approved and processed.
+              </p>
+            </div>
+            
+            <p style="color: #666; line-height: 1.6;">
+              Our admin team typically processes withdrawals within 24-48 hours. You'll receive another email once your withdrawal has been processed.
+            </p>
+          </div>
+          
+          <div style="text-align: center; padding: 20px; background: #f8f9fa; color: #666; font-size: 14px;">
+            <p style="margin: 0;">© 2024 PromoHive. All rights reserved.</p>
+          </div>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    logger.info(`Withdrawal request email sent to ${email}`);
+  } catch (error) {
+    logger.error('Failed to send withdrawal request email:', error);
+    throw error;
+  }
+};
+
+// Withdrawal Approved Email
+export const sendWithdrawalApprovedEmail = async (email: string, fullName: string, amount: number) => {
+  try {
+    const mailOptions = {
+      from: process.env.SMTP_FROM || 'promohive@globalpromonetwork.store',
+      to: email,
+      subject: '✅ Withdrawal Approved - PromoHive',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white;">
+            <h1 style="margin: 0; font-size: 28px;">✅ Withdrawal Approved</h1>
+            <p style="margin: 10px 0 0 0; font-size: 16px;">PromoHive</p>
+          </div>
+          
+          <div style="padding: 30px; background: #f8f9fa;">
+            <h2 style="color: #333; margin-bottom: 20px;">Hello ${fullName}!</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Great news! Your withdrawal request has been approved and processed.
+            </p>
+            
+            <div style="background: #d4edda; border: 1px solid #c3e6cb; border-radius: 8px; padding: 20px; margin: 20px 0;">
+              <h3 style="color: #155724; margin: 0 0 10px 0;">💰 Payment Details</h3>
+              <p style="color: #155724; margin: 0; line-height: 1.5;">
+                <strong>Amount Sent:</strong> $${amount.toFixed(2)}<br>
+                <strong>Status:</strong> Approved & Processed<br>
+                <strong>Payment Method:</strong> USDT
+              </p>
+            </div>
+            
+            <p style="color: #666; line-height: 1.6;">
+              Your funds should arrive in your wallet within a few minutes. Thank you for using PromoHive!
+            </p>
+          </div>
+          
+          <div style="text-align: center; padding: 20px; background: #f8f9fa; color: #666; font-size: 14px;">
+            <p style="margin: 0;">© 2024 PromoHive. All rights reserved.</p>
+          </div>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    logger.info(`Withdrawal approved email sent to ${email}`);
+  } catch (error) {
+    logger.error('Failed to send withdrawal approved email:', error);
+    throw error;
+  }
+};
+
+// Withdrawal Rejected Email
+export const sendWithdrawalRejectedEmail = async (email: string, fullName: string, amount: number, reason: string) => {
+  try {
+    const mailOptions = {
+      from: process.env.SMTP_FROM || 'promohive@globalpromonetwork.store',
+      to: email,
+      subject: '❌ Withdrawal Rejected - PromoHive',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white;">
+            <h1 style="margin: 0; font-size: 28px;">❌ Withdrawal Rejected</h1>
+            <p style="margin: 10px 0 0 0; font-size: 16px;">PromoHive</p>
+          </div>
+          
+          <div style="padding: 30px; background: #f8f9fa;">
+            <h2 style="color: #333; margin-bottom: 20px;">Hello ${fullName}!</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Unfortunately, your withdrawal request has been rejected.
+            </p>
+            
+            <div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 8px; padding: 20px; margin: 20px 0;">
+              <h3 style="color: #721c24; margin: 0 0 10px 0;">Rejection Details</h3>
+              <p style="color: #721c24; margin: 0 0 10px 0; line-height: 1.5;">
+                <strong>Amount Requested:</strong> $${amount.toFixed(2)}<br>
+                <strong>Reason:</strong> ${reason}
+              </p>
+              <p style="color: #721c24; margin: 0; line-height: 1.5;">
+                Your funds have been returned to your account balance.
+              </p>
+            </div>
+            
+            <p style="color: #666; line-height: 1.6;">
+              If you have any questions about this decision, please contact our support team.
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${process.env.PLATFORM_URL || 'http://localhost:3000'}" 
+                 style="background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                Contact Support
+              </a>
+            </div>
+          </div>
+          
+          <div style="text-align: center; padding: 20px; background: #f8f9fa; color: #666; font-size: 14px;">
+            <p style="margin: 0;">© 2024 PromoHive. All rights reserved.</p>
+          </div>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    logger.info(`Withdrawal rejected email sent to ${email}`);
+  } catch (error) {
+    logger.error('Failed to send withdrawal rejected email:', error);
+    throw error;
+  }
+};
+
+// Account Rejected Email
+export const sendAccountRejectedEmail = async (email: string, fullName: string, reason: string) => {
+  try {
+    const mailOptions = {
+      from: process.env.SMTP_FROM || 'promohive@globalpromonetwork.store',
+      to: email,
+      subject: '❌ Account Registration Rejected - PromoHive',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white;">
+            <h1 style="margin: 0; font-size: 28px;">❌ Registration Rejected</h1>
+            <p style="margin: 10px 0 0 0; font-size: 16px;">PromoHive</p>
+          </div>
+          
+          <div style="padding: 30px; background: #f8f9fa;">
+            <h2 style="color: #333; margin-bottom: 20px;">Hello ${fullName}!</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              We regret to inform you that your account registration has been rejected.
+            </p>
+            
+            <div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 8px; padding: 20px; margin: 20px 0;">
+              <h3 style="color: #721c24; margin: 0 0 10px 0;">Rejection Reason</h3>
+              <p style="color: #721c24; margin: 0; line-height: 1.5;">
+                ${reason}
+              </p>
+            </div>
+            
+            <p style="color: #666; line-height: 1.6;">
+              If you believe this is an error or have any questions, please contact our support team.
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${process.env.PLATFORM_URL || 'http://localhost:3000'}" 
+                 style="background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                Contact Support
+              </a>
+            </div>
+          </div>
+          
+          <div style="text-align: center; padding: 20px; background: #f8f9fa; color: #666; font-size: 14px;">
+            <p style="margin: 0;">© 2024 PromoHive. All rights reserved.</p>
+          </div>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    logger.info(`Account rejected email sent to ${email}`);
+  } catch (error) {
+    logger.error('Failed to send account rejected email:', error);
     throw error;
   }
 };

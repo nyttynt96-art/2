@@ -1132,7 +1132,7 @@ function LuckWheel() {
                     <text x="160" y="170" textAnchor="middle" fontSize="16" fontWeight="bold">SPIN</text>
                   </svg>
                   
-                  {/* Prize Labels on separate layer */}
+                  {/* Prize Labels - Rotated text for each sector */}
                   <g>
                     {prizes.map((prize, index) => {
                       const angle = (index * 45 - 22.5) * (Math.PI / 180)
@@ -1146,14 +1146,14 @@ function LuckWheel() {
                           y={y}
                           textAnchor="middle"
                           dominantBaseline="middle"
-                          className="text-white font-bold text-sm"
                           fill="white"
                           stroke="black"
-                          strokeWidth="0.5"
-                          fontSize="16"
+                          strokeWidth="2"
+                          fontSize="18"
                           fontWeight="bold"
+                          transform={`rotate(${index * 45}, ${x}, ${y})`}
                         >
-                          {prize.label}
+                          ${prize.value.toFixed(2)}
                         </text>
                       )
                     })}
