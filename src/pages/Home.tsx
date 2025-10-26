@@ -5,6 +5,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, DollarSign, Users, Target, Shield, Zap, Star, TrendingUp, Clock, CheckCircle } from 'lucide-react';
 
+// Logo Component
+const LogoIcon = ({ size = 40 }: { size?: number }) => (
+  <div 
+    className="rounded-lg flex items-center justify-center font-bold text-white shadow-lg"
+    style={{
+      width: size,
+      height: size,
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    }}
+  >
+    <span style={{ fontSize: size * 0.5 }}>P</span>
+  </div>
+);
+
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
@@ -13,7 +27,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3 hover-lift">
-              <img src="/logo.png" onError={(e) => { (e.target as HTMLImageElement).src = '/promohive-logo.png'; }} alt="PromoHive" className="h-10 w-10 float-animation brightness-110" />
+              <LogoIcon size={40} />
               <div>
                 <h1 className="text-2xl font-bold text-white font-display drop-shadow-lg">PromoHive</h1>
                 <p className="text-sm text-slate-300">Global Promo Network</p>
@@ -345,7 +359,7 @@ export default function Home() {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="animate-fade-in">
               <div className="flex items-center space-x-3 mb-4 hover-lift">
-                <img src="/logo.png" onError={(e) => { (e.target as HTMLImageElement).src = '/promohive-logo.png'; }} alt="PromoHive" className="h-8 w-8 float-animation" />
+                <LogoIcon size={32} />
                 <div>
                   <h3 className="text-xl font-bold font-display">PromoHive</h3>
                   <p className="text-sm text-gray-400">Global Promo Network</p>
