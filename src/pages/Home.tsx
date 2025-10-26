@@ -5,40 +5,56 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { ArrowRight, DollarSign, Users, Target, Shield, Zap, Star, TrendingUp, Clock, CheckCircle } from 'lucide-react';
 
-// Logo Component
-const LogoIcon = ({ size = 40 }: { size?: number }) => (
-  <div 
-    className="rounded-lg flex items-center justify-center font-bold text-white shadow-lg"
-    style={{
-      width: size,
-      height: size,
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-    }}
-  >
-    <span style={{ fontSize: size * 0.5 }}>P</span>
-  </div>
-);
+// Logo Component - Optimized with better rendering
+const LogoIcon = ({ size = 40 }: { size?: number }) => {
+  const s = Math.max(size, 32); // Ensure minimum size
+  return (
+    <div 
+      className="rounded-lg flex items-center justify-center font-bold text-white shadow-lg transition-all"
+      style={{
+        minWidth: s,
+        minHeight: s,
+        width: s,
+        height: s,
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <span 
+        style={{ 
+          fontSize: Math.floor(s * 0.55),
+          lineHeight: 1,
+          fontWeight: 700,
+        }}
+      >
+        P
+      </span>
+    </div>
+  );
+};
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Header */}
       <header className="bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 backdrop-blur-lg border-b border-slate-600/50 sticky top-0 z-50 shadow-xl">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-3 md:py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3 hover-lift">
+            <div className="flex items-center space-x-2 md:space-x-3 hover-lift">
               <LogoIcon size={40} />
               <div>
-                <h1 className="text-2xl font-bold text-white font-display drop-shadow-lg">PromoHive</h1>
-                <p className="text-sm text-slate-300">Global Promo Network</p>
+                <h1 className="text-lg md:text-2xl font-bold text-white font-display drop-shadow-lg">PromoHive</h1>
+                <p className="text-xs md:text-sm text-slate-300 hidden sm:block">Global Promo Network</p>
               </div>
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 md:space-x-4">
               <Link href="/login">
-                <Button variant="ghost" className="hover-glow text-white hover:bg-white/10">Login</Button>
+                <Button variant="ghost" className="hover-glow text-white hover:bg-white/10 text-sm md:text-base px-2 md:px-4 py-1 md:py-2">Login</Button>
               </Link>
               <Link href="/register">
-                <Button className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-lg">Get Started</Button>
+                <Button className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white shadow-lg text-sm md:text-base px-3 md:px-6 py-1 md:py-2">Get Started</Button>
               </Link>
             </div>
           </div>
@@ -49,15 +65,15 @@ export default function Home() {
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 bg-brand-gradient opacity-5" />
         <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-purple-600/10" />
-        <div className="container mx-auto px-4 py-20 relative z-10">
+        <div className="container mx-auto px-4 py-12 md:py-20 relative z-10">
           <div className="text-center max-w-4xl mx-auto animate-fade-in">
-            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 font-display">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold text-gray-900 mb-4 md:mb-6 font-display">
               Earn Money with{' '}
               <span className="text-gradient animate-gradient-x">
                 PromoHive
               </span>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-600 mb-8 leading-relaxed animate-slide-up">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 mb-6 md:mb-8 leading-relaxed animate-slide-up px-4">
               Join the global promo network and start earning money by completing simple tasks, 
               referring friends, and participating in our reward system.
             </p>
