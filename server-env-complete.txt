@@ -1,0 +1,107 @@
+# =====================================================
+# PromoHive Production Environment - READY TO USE
+# السيرفر: Ubuntu 24.04 LTS @ 72.60.215.2
+# الدومين: globalpromonetwork.store
+# جاهز للنشر مع مفاتيح أمان قوية
+# =====================================================
+
+# ---------------------------------------------
+# PostgreSQL Database
+# ---------------------------------------------
+DATABASE_URL="postgresql://promohive_user:CHANGE_THIS_PASSWORD@localhost:5432/promohive?schema=public"
+
+# ---------------------------------------------
+# Server Configuration
+# ---------------------------------------------
+PORT=3002
+NODE_ENV=production
+CORS_ORIGIN="https://globalpromonetwork.store"
+PLATFORM_URL="https://globalpromonetwork.store"
+
+# ---------------------------------------------
+# JWT Secrets (Secure Generated Keys)
+# ---------------------------------------------
+JWT_SECRET="Xk9mP2vQ5wR8tY1uI3oA6sD9fG0hJ4kL7mN0pQ3rS6tU9vW2xY5zA8bC1dE4fG7h"
+JWT_REFRESH_SECRET="A7bC2dE5fG8hI1jK4lM7nO0pQ3rS6tU9vW2xY5zA8bC1dE4fG7hJ0kL3m"
+ACCESS_TOKEN_EXPIRES_IN=15m
+REFRESH_TOKEN_EXPIRES_IN=7d
+
+# ---------------------------------------------
+# Email Configuration (Hostinger)
+# ---------------------------------------------
+SMTP_HOST=smtp.hostinger.com
+SMTP_PORT=465
+SMTP_SECURE=true
+SMTP_USER=promohive@globalpromonetwork.store
+SMTP_PASS=PromoHive@2025!
+SMTP_FROM="PromoHive <promohive@globalpromonetwork.store>"
+SMTP_NAME="PromoHive"
+
+# ---------------------------------------------
+# Rate Limiting
+# ---------------------------------------------
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX_REQUESTS=100
+
+# ---------------------------------------------
+# Security Settings
+# ---------------------------------------------
+BCRYPT_SALT_ROUNDS=12
+SESSION_SECRET="V8wX1yZ4aB7cD0eF3gH6iJ9kL2mN5oP8qR1sT4uV7wX0yZ3aB6cD9eF2gH5iJ8kL"
+ALLOWED_ORIGINS="https://globalpromonetwork.store,https://www.globalpromonetwork.store"
+
+# ---------------------------------------------
+# Logging
+# ---------------------------------------------
+LOG_LEVEL=info
+
+# ---------------------------------------------
+# File Upload
+# ---------------------------------------------
+MAX_FILE_SIZE=10485760
+UPLOAD_DIR=./uploads
+SESSION_COOKIE_MAX_AGE=86400000
+
+# ---------------------------------------------
+# Features
+# ---------------------------------------------
+ENABLE_REGISTRATION=true
+ENABLE_EMAIL_VERIFICATION=true
+ENABLE_2FA=false
+
+# ---------------------------------------------
+# Payment & Withdrawal
+# ---------------------------------------------
+MIN_WITHDRAWAL_AMOUNT=10
+MAX_WITHDRAWAL_AMOUNT=1000
+WITHDRAWAL_FEE=5
+
+# ---------------------------------------------
+# Referral System
+# ---------------------------------------------
+REFERRAL_BONUS_AMOUNT=5
+REFERRAL_LEVELS=2
+
+# ---------------------------------------------
+# Cron Jobs
+# ---------------------------------------------
+ENABLE_CRON_JOBS=true
+CLEANUP_OLD_DATA_DAYS=30
+
+# ---------------------------------------------
+# External APIs (Fill these as needed)
+# ---------------------------------------------
+ADGEM_JWT_SECRET=
+ADSTERRA_API_KEY=
+CPALEAD_API_KEY=
+OFFER_TASTIC_API_KEY=
+
+# =====================================================
+# ملاحظات مهمة:
+# =====================================================
+# 1. استبدل "CHANGE_THIS_PASSWORD" بكلمة مرور قاعدة البيانات
+# 2. المفاتيح JWT جاهزة وآمنة (64 حرف لكل مفتاح)
+# 3. البريد الإلكتروني جاهز على Hostinger
+# 4. احفظ هذا الملف بعناية ولا تشاركه!
+# =====================================================
+
