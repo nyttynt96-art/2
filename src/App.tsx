@@ -681,13 +681,13 @@ function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
       <Navigation user={user} onLogout={logout} />
       
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-4 py-8 relative z-10">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold gradient-text mb-2">👤 My Profile</h1>
-          <p className="text-gray-600">Manage your account settings and personal information</p>
+          <h1 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">👤 My Profile</h1>
+          <p className="text-white opacity-90">Manage your account settings and personal information</p>
         </div>
 
         {success && (
@@ -833,15 +833,15 @@ function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
       <Navigation user={user} onLogout={logout} />
       
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold gradient-text mb-2">
+          <h1 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">
             Welcome back, {user.fullName}!
           </h1>
-          <p className="text-gray-600">Here's your account overview</p>
+          <p className="text-white opacity-90">Here's your account overview</p>
         </div>
         
         {!user.isApproved && (
@@ -972,6 +972,7 @@ function LuckWheel() {
   const [result, setResult] = useState(null)
   const [spinsLeft, setSpinsLeft] = useState(3)
   const [lastSpinDate, setLastSpinDate] = useState(null)
+  const [rotation, setRotation] = useState(0)
 
   // Probability-based prizes: lower prizes have more slots
   const prizes = [
@@ -996,31 +997,6 @@ function LuckWheel() {
     }
     return prizes[0]
   }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="spinner w-16 h-16 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    )
-  }
-
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">Access Denied</h1>
-          <p className="text-gray-600 mb-6">You need to be logged in to access this page.</p>
-          <a href="/login" className="btn-primary">Go to Login</a>
-        </div>
-      </div>
-    )
-  }
-
-  const [rotation, setRotation] = useState(0)
 
   const handleSpinClick = () => {
     if (spinsLeft <= 0) {
@@ -1063,6 +1039,29 @@ function LuckWheel() {
     }
     
     animate()
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="spinner w-16 h-16 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Access Denied</h1>
+          <p className="text-gray-600 mb-6">You need to be logged in to access this page.</p>
+          <a href="/login" className="btn-primary">Go to Login</a>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -2161,13 +2160,13 @@ function Tasks() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
       <Navigation user={user} onLogout={logout} />
       
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold gradient-text mb-4">📋 Available Tasks</h1>
-          <p className="text-xl text-gray-600">Complete tasks and earn money</p>
+          <h1 className="text-4xl font-bold text-white mb-4 drop-shadow-lg">📋 Available Tasks</h1>
+          <p className="text-xl text-white opacity-90">Complete tasks and earn money</p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -2235,13 +2234,13 @@ function Referrals() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
       <Navigation user={user} onLogout={logout} />
       
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold gradient-text mb-4">👥 Referral Program</h1>
-          <p className="text-xl text-gray-600">Invite friends and earn bonuses</p>
+          <h1 className="text-4xl font-bold text-white mb-4 drop-shadow-lg">👥 Referral Program</h1>
+          <p className="text-xl text-white opacity-90">Invite friends and earn bonuses</p>
         </div>
         
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
