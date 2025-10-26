@@ -1319,20 +1319,412 @@ function NotFound() {
   )
 }
 
+// Tasks component
+function Tasks() {
+  const { user, logout, loading } = React.useContext(AuthContext)
+  const [tasks] = useState([
+    {
+      id: 1,
+      title: 'Follow Instagram Account',
+      description: 'Follow our Instagram account and like 5 recent posts',
+      reward: 2.50,
+      type: 'MANUAL',
+      status: 'ACTIVE'
+    },
+    {
+      id: 2,
+      title: 'Join Telegram Group',
+      description: 'Join our Telegram group and stay active for 7 days',
+      reward: 5.00,
+      type: 'MANUAL',
+      status: 'ACTIVE'
+    },
+    {
+      id: 3,
+      title: 'Download Mobile App',
+      description: 'Download and install our mobile app',
+      reward: 3.00,
+      type: 'MANUAL',
+      status: 'ACTIVE'
+    },
+    {
+      id: 4,
+      title: 'Subscribe YouTube Channel',
+      description: 'Subscribe to our YouTube channel and watch 3 videos',
+      reward: 1.50,
+      type: 'MANUAL',
+      status: 'ACTIVE'
+    },
+    {
+      id: 5,
+      title: 'Follow Twitter Account',
+      description: 'Follow our Twitter account and retweet 2 posts',
+      reward: 2.00,
+      type: 'MANUAL',
+      status: 'ACTIVE'
+    },
+    {
+      id: 6,
+      title: 'Join Discord Server',
+      description: 'Join our Discord server and stay active for 5 days',
+      reward: 4.00,
+      type: 'MANUAL',
+      status: 'ACTIVE'
+    }
+  ])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="spinner w-16 h-16 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Access Denied</h1>
+          <p className="text-gray-600 mb-6">You need to be logged in to access this page.</p>
+          <a href="/login" className="btn-primary">Go to Login</a>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation user={user} onLogout={logout} />
+      
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold gradient-text mb-4">📋 Available Tasks</h1>
+          <p className="text-xl text-gray-600">Complete tasks and earn money</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {tasks.map(task => (
+            <div key={task.id} className="card hover:shadow-2xl transition-all duration-300">
+              <div className="text-center mb-4">
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl">📋</span>
+                </div>
+                <h3 className="text-xl font-semibold mb-2">{task.title}</h3>
+                <p className="text-gray-600 mb-4">{task.description}</p>
+              </div>
+              
+              <div className="flex justify-between items-center mb-4">
+                <span className="badge badge-primary">{task.type}</span>
+                <span className="text-2xl font-bold text-green-600">${task.reward}</span>
+              </div>
+              
+              <button className="btn-primary w-full">
+                Start Task
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Referrals component
+function Referrals() {
+  const { user, logout, loading } = React.useContext(AuthContext)
+  const [referralCode] = useState('PH' + Math.random().toString(36).substr(2, 8).toUpperCase())
+  const [referrals] = useState([
+    { id: 1, name: 'John Doe', email: 'john@example.com', level: 1, earnings: 2.50, status: 'active' },
+    { id: 2, name: 'Jane Smith', email: 'jane@example.com', level: 2, earnings: 1.25, status: 'active' }
+  ])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="spinner w-16 h-16 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Access Denied</h1>
+          <p className="text-gray-600 mb-6">You need to be logged in to access this page.</p>
+          <a href="/login" className="btn-primary">Go to Login</a>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation user={user} onLogout={logout} />
+      
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold gradient-text mb-4">👥 Referral Program</h1>
+          <p className="text-xl text-gray-600">Invite friends and earn bonuses</p>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          <div className="card">
+            <h3 className="text-2xl font-semibold mb-6 gradient-text">Your Referral Code</h3>
+            <div className="bg-gray-100 p-6 rounded-lg mb-6">
+              <code className="text-3xl font-mono font-bold text-blue-600">{referralCode}</code>
+            </div>
+            <button 
+              onClick={() => {
+                navigator.clipboard.writeText(referralCode)
+                alert('Referral code copied to clipboard!')
+              }}
+              className="btn-primary w-full"
+            >
+              Copy Code
+            </button>
+          </div>
+          
+          <div className="card">
+            <h3 className="text-2xl font-semibold mb-6 gradient-text">Referral Rewards</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
+                <span className="font-semibold">Level 1 Referral</span>
+                <span className="text-2xl font-bold text-blue-600">$2.50</span>
+              </div>
+              <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
+                <span className="font-semibold">Level 2 Referral</span>
+                <span className="text-2xl font-bold text-green-600">$1.25</span>
+              </div>
+              <div className="flex justify-between items-center p-4 bg-purple-50 rounded-lg">
+                <span className="font-semibold">Level 3 Referral</span>
+                <span className="text-2xl font-bold text-purple-600">$0.75</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="card">
+          <h3 className="text-2xl font-semibold mb-6 gradient-text">Your Referrals</h3>
+          <div className="overflow-x-auto">
+            <table className="table">
+              <thead className="table-header">
+                <tr>
+                  <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                  <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                  <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Level</th>
+                  <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Earnings</th>
+                  <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {referrals.map(referral => (
+                  <tr key={referral.id} className="table-row">
+                    <td className="table-cell font-medium text-gray-900">{referral.name}</td>
+                    <td className="table-cell text-gray-500">{referral.email}</td>
+                    <td className="table-cell">
+                      <span className="badge badge-primary">L{referral.level}</span>
+                    </td>
+                    <td className="table-cell text-green-600 font-semibold">${referral.earnings}</td>
+                    <td className="table-cell">
+                      <span className="badge badge-success">{referral.status}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Withdrawals component
+function Withdrawals() {
+  const { user, logout, loading } = React.useContext(AuthContext)
+  const [formData, setFormData] = useState({
+    amount: '',
+    walletAddress: '',
+    network: 'USDT'
+  })
+  const [balance] = useState(user?.role === 'SUPER_ADMIN' ? 1000.00 : 5.00)
+  const [withdrawals] = useState([
+    { id: 1, amount: 25.00, address: 'TQn9Y2khEsLJW1ChVWFMSMeRDow5KcbLSE', network: 'TRC20', status: 'completed', date: '2024-01-15' },
+    { id: 2, amount: 50.00, address: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6', network: 'ERC20', status: 'pending', date: '2024-01-20' }
+  ])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="spinner w-16 h-16 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Access Denied</h1>
+          <p className="text-gray-600 mb-6">You need to be logged in to access this page.</p>
+          <a href="/login" className="btn-primary">Go to Login</a>
+        </div>
+      </div>
+    )
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (parseFloat(formData.amount) < 10) {
+      alert('Minimum withdrawal amount is $10')
+      return
+    }
+    if (parseFloat(formData.amount) > balance) {
+      alert('Insufficient balance')
+      return
+    }
+    alert('Withdrawal request submitted! It will be processed within 24 hours.')
+    setFormData({ amount: '', walletAddress: '', network: 'USDT' })
+  }
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation user={user} onLogout={logout} />
+      
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold gradient-text mb-4">💰 Withdraw Earnings</h1>
+          <p className="text-xl text-gray-600">Withdraw your earnings to your USDT wallet</p>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="card">
+            <h3 className="text-2xl font-semibold mb-6 gradient-text">Withdrawal Request</h3>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Amount (USD)</label>
+                <input 
+                  type="number" 
+                  name="amount"
+                  value={formData.amount}
+                  onChange={handleChange}
+                  className="form-input"
+                  placeholder="Enter amount"
+                  min="10"
+                  step="0.01"
+                  required
+                />
+                <p className="text-sm text-gray-500 mt-1">Available balance: ${balance}</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">USDT Wallet Address</label>
+                <input 
+                  type="text" 
+                  name="walletAddress"
+                  value={formData.walletAddress}
+                  onChange={handleChange}
+                  className="form-input"
+                  placeholder="Enter your USDT wallet address"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Network</label>
+                <select 
+                  name="network"
+                  value={formData.network}
+                  onChange={handleChange}
+                  className="form-select"
+                >
+                  <option value="USDT">USDT (TRC20)</option>
+                  <option value="USDT_ERC20">USDT (ERC20)</option>
+                </select>
+              </div>
+              <button 
+                type="submit"
+                className="btn-success w-full"
+              >
+                Submit Withdrawal Request
+              </button>
+            </form>
+          </div>
+          
+          <div className="card">
+            <h3 className="text-2xl font-semibold mb-6 gradient-text">Withdrawal History</h3>
+            <div className="overflow-x-auto">
+              <table className="table">
+                <thead className="table-header">
+                  <tr>
+                    <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                    <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Network</th>
+                    <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th className="table-cell text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {withdrawals.map(withdrawal => (
+                    <tr key={withdrawal.id} className="table-row">
+                      <td className="table-cell font-medium text-gray-900">${withdrawal.amount}</td>
+                      <td className="table-cell">
+                        <span className="badge badge-primary">{withdrawal.network}</span>
+                      </td>
+                      <td className="table-cell">
+                        <span className={`badge ${
+                          withdrawal.status === 'completed' ? 'badge-success' :
+                          withdrawal.status === 'pending' ? 'badge-warning' :
+                          'badge-danger'
+                        }`}>
+                          {withdrawal.status}
+                        </span>
+                      </td>
+                      <td className="table-cell text-gray-500">{withdrawal.date}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function App() {
   return (
     <AuthProvider>
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/login" component={Login} />
-      <Route path="/register" component={Register} />
-      <Route path="/dashboard" component={Dashboard} />
+      <Switch>
+        <Route path="/" component={Home} />
+        <Route path="/login" component={Login} />
+        <Route path="/register" component={Register} />
+        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/tasks" component={Tasks} />
+        <Route path="/referrals" component={Referrals} />
+        <Route path="/withdrawals" component={Withdrawals} />
         <Route path="/luck-wheel" component={LuckWheel} />
         <Route path="/mining" component={MiningContracts} />
-      <Route path="/admin" component={AdminDashboard} />
-      <Route component={NotFound} />
-    </Switch>
-          </AuthProvider>
+        <Route path="/admin" component={AdminDashboard} />
+        <Route component={NotFound} />
+      </Switch>
+    </AuthProvider>
   )
 }
 
