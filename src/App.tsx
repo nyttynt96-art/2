@@ -1147,7 +1147,7 @@ function LuckWheel() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Wheel */}
-          <div className="card glass-effect">
+          <div className="glass-effect rounded-2xl p-6 border border-white/30 shadow-2xl backdrop-blur-xl">
             <div className="text-center">
               <div className="relative w-80 h-80 mx-auto mb-6">
                 {/* Pointer */}
@@ -1238,46 +1238,15 @@ function LuckWheel() {
             </div>
           </div>
 
-          {/* Info */}
-          <div className="card glass-effect">
-            <h3 className="text-2xl font-bold mb-6 gradient-text">Spin Information</h3>
-            
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
-                <span className="font-semibold">Spins Left Today:</span>
-                <span className="text-2xl font-bold text-blue-600">{spinsLeft}</span>
-              </div>
-              
-              <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
-                <span className="font-semibold">Max Prize:</span>
-                <span className="text-2xl font-bold text-green-600">$0.30</span>
-              </div>
-              
-              <div className="flex justify-between items-center p-4 bg-purple-50 rounded-lg">
-                <span className="font-semibold">Daily Limit:</span>
-                <span className="text-2xl font-bold text-purple-600">3 Spins</span>
-              </div>
+          {/* Result Announcement */}
+          {result && (
+            <div className="mt-8 p-8 glass-effect rounded-2xl border border-white/30 shadow-2xl text-center">
+              <div className="text-6xl mb-4">🎉</div>
+              <h3 className="text-3xl font-bold text-white mb-2 drop-shadow-lg">Congratulations!</h3>
+              <p className="text-4xl font-black text-white drop-shadow-lg">You won {result.label}!</p>
+              <p className="text-white/80 mt-4 text-lg">Your prize has been added to your balance</p>
             </div>
-
-            {result && (
-              <div className="mt-6 p-6 bg-gradient-to-r from-green-400 to-blue-500 rounded-lg text-white text-center">
-                <h4 className="text-2xl font-bold mb-2">🎉 Congratulations!</h4>
-                <p className="text-3xl font-bold">You won {result.label}!</p>
-              </div>
-            )}
-
-            <div className="mt-6">
-              <h4 className="font-semibold mb-3">Prize Values:</h4>
-              <div className="grid grid-cols-2 gap-2">
-                {prizes.slice(0, 6).map((prize, index) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <div className="w-4 h-4 rounded-full" style={{ backgroundColor: prize.color }}></div>
-                    <span className="text-sm">{prize.label}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
