@@ -64,6 +64,7 @@ function Navigation({ user, onLogout }) {
     { href: '/withdrawals', icon: '💰', label: 'Withdrawals', loggedIn: true },
     { href: '/luck-wheel', icon: '🎰', label: 'Luck Wheel', loggedIn: true },
     { href: '/mining', icon: '⛏️', label: 'Mining', loggedIn: true },
+    { href: '/profile', icon: '👤', label: 'Profile', loggedIn: true },
     { href: '/admin', icon: '🛠️', label: 'Admin', loggedIn: true, adminOnly: true },
   ]
 
@@ -596,6 +597,195 @@ function Register() {
               Sign in here
             </a>
           </p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Profile component
+function Profile() {
+  const { user, logout, loading, login } = React.useContext(AuthContext)
+  const [formData, setFormData] = useState({
+    fullName: user?.fullName || '',
+    username: user?.username || '',
+    email: user?.email || '',
+    password: '',
+    newPassword: '',
+    confirmPassword: ''
+  })
+  const [success, setSuccess] = useState('')
+  const [error, setError] = useState('')
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="spinner w-16 h-16 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Access Denied</h1>
+          <p className="text-gray-600 mb-6">You need to be logged in to access this page.</p>
+          <a href="/login" className="btn-primary">Go to Login</a>
+        </div>
+      </div>
+    )
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setError('')
+    setSuccess('')
+
+    if (formData.newPassword && formData.newPassword !== formData.confirmPassword) {
+      setError('New passwords do not match!')
+      return
+    }
+
+    if (formData.newPassword && formData.newPassword.length < 6) {
+      setError('New password must be at least 6 characters long')
+      return
+    }
+
+    // Update user data
+    const updatedUser = {
+      ...user,
+      fullName: formData.fullName,
+      username: formData.username,
+      email: formData.email
+    }
+
+    login(updatedUser)
+    setSuccess('Profile updated successfully!')
+    setFormData({
+      ...formData,
+      password: '',
+      newPassword: '',
+      confirmPassword: ''
+    })
+  }
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Navigation user={user} onLogout={logout} />
+      
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold gradient-text mb-2">👤 My Profile</h1>
+          <p className="text-gray-600">Manage your account settings and personal information</p>
+        </div>
+
+        {success && (
+          <div className="mb-6 bg-green-100 border border-green-400 text-green-700 px-6 py-4 rounded-lg">
+            {success}
+          </div>
+        )}
+
+        {error && (
+          <div className="mb-6 bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg">
+            {error}
+          </div>
+        )}
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="card">
+            <div className="text-center mb-6">
+              <div className="w-24 h-24 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-4xl">👤</span>
+              </div>
+              <h3 className="text-2xl font-bold mb-2">{user.fullName}</h3>
+              <p className="text-gray-600">{user.email}</p>
+              <div className="mt-4">
+                <span className={`badge ${user.role === 'SUPER_ADMIN' ? 'badge-purple' : user.role === 'ADMIN' ? 'badge-primary' : 'badge-success'}`}>
+                  {user.role}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-2">
+            <div className="card">
+              <h3 className="text-2xl font-semibold mb-6 gradient-text">Edit Profile</h3>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                  <input 
+                    type="text" 
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    className="form-input"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Username</label>
+                  <input 
+                    type="text" 
+                    name="username"
+                    value={formData.username}
+                    onChange={handleChange}
+                    className="form-input"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                  <input 
+                    type="email" 
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    className="form-input"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">New Password (Optional)</label>
+                  <input 
+                    type="password" 
+                    name="newPassword"
+                    value={formData.newPassword}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="Leave empty to keep current password"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                  <input 
+                    type="password" 
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="Confirm new password"
+                  />
+                </div>
+                <button 
+                  type="submit"
+                  className="btn-primary w-full"
+                >
+                  Save Changes
+                </button>
+              </form>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1199,6 +1389,41 @@ function AdminDashboard() {
     alert(`User level updated to L${newLevel}`)
   }
 
+  const addNewUser = () => {
+    const name = prompt('Enter Full Name:')
+    const email = prompt('Enter Email:')
+    const role = prompt('Enter Role (USER/ADMIN/SUPER_ADMIN):')
+    
+    if (name && email && role) {
+      const newUser = {
+        id: users.length + 1,
+        name: name,
+        email: email,
+        role: role.toUpperCase(),
+        isApproved: true,
+        balance: 0,
+        level: 0
+      }
+      setUsers([...users, newUser])
+      alert('User added successfully!')
+    }
+  }
+
+  const editUser = (userId) => {
+    const user = users.find(u => u.id === userId)
+    const name = prompt('Enter Full Name:', user.name)
+    const email = prompt('Enter Email:', user.email)
+    const role = prompt('Enter Role (USER/ADMIN/SUPER_ADMIN):', user.role)
+    const balance = prompt('Enter Balance:', user.balance.toString())
+    
+    if (name && email && role && balance) {
+      setUsers(users.map(u => 
+        u.id === userId ? { ...u, name, email, role: role.toUpperCase(), balance: parseFloat(balance) } : u
+      ))
+      alert('User updated successfully!')
+    }
+  }
+
   const addTask = () => {
     const title = prompt('Enter Task Title:')
     const description = prompt('Enter Task Description:')
@@ -1258,25 +1483,29 @@ function AdminDashboard() {
         {/* Admin Tabs */}
         <div className="card mb-8">
           <div className="border-b border-gray-200">
-            <nav className="-mb-px flex space-x-8 px-6">
+            <nav className="-mb-px flex flex-wrap gap-2 px-6 py-4">
               {[
-                { id: 'overview', name: 'Overview' },
-                { id: 'users', name: 'Users' },
-                { id: 'tasks', name: 'Tasks' },
-                { id: 'usdt', name: 'USDT Addresses' },
-                { id: 'withdrawals', name: 'Withdrawals' },
-                { id: 'settings', name: 'Settings' }
+                { id: 'overview', name: 'Overview', icon: '📊' },
+                { id: 'users', name: 'Users', icon: '👥' },
+                { id: 'tasks', name: 'Tasks', icon: '📋' },
+                { id: 'usdt', name: 'USDT Addresses', icon: '💎' },
+                { id: 'withdrawals', name: 'Withdrawals', icon: '💰' },
+                { id: 'settings', name: 'Settings', icon: '⚙️' }
               ].map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                  className={`group flex items-center space-x-2 px-4 py-3 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105 ${
                     activeTab === tab.id
-                      ? 'border-blue-500 text-blue-600'
-                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      ? 'bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 text-white shadow-lg'
+                      : 'bg-white text-gray-700 hover:bg-gray-100 hover:shadow-md border border-gray-200'
                   }`}
                 >
-                  {tab.name}
+                  <span className={`text-xl ${activeTab === tab.id ? 'animate-pulse' : ''}`}>{tab.icon}</span>
+                  <span>{tab.name}</span>
+                  {activeTab === tab.id && (
+                    <div className="absolute -bottom-1 left-0 right-0 h-1 bg-white/50 rounded-full"></div>
+                  )}
                 </button>
               ))}
             </nav>
@@ -1285,42 +1514,81 @@ function AdminDashboard() {
 
         {/* Tab Content */}
         {activeTab === 'overview' && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="stats-card">
-              <div className="stats-icon bg-blue-100 text-blue-600 mb-4">
-                👥
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="stats-card group cursor-pointer hover:shadow-2xl">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="stats-icon bg-gradient-to-r from-blue-500 to-cyan-500 text-white animate-pulse">
+                    👥
+                  </div>
+                  <div className="text-3xl opacity-20 group-hover:opacity-40 transition-opacity">👥</div>
+                </div>
+                <div className="stats-label">Total Users</div>
+                <div className="stats-value text-blue-600 group-hover:scale-110 transition-transform">1,234</div>
               </div>
-              <div className="stats-label">Total Users</div>
-              <div className="stats-value text-blue-600">1,234</div>
+              <div className="stats-card group cursor-pointer hover:shadow-2xl">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="stats-icon bg-gradient-to-r from-green-500 to-emerald-500 text-white animate-pulse">
+                    ✅
+                  </div>
+                  <div className="text-3xl opacity-20 group-hover:opacity-40 transition-opacity">✅</div>
+                </div>
+                <div className="stats-label">Active Tasks</div>
+                <div className="stats-value text-green-600 group-hover:scale-110 transition-transform">45</div>
+              </div>
+              <div className="stats-card group cursor-pointer hover:shadow-2xl">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="stats-icon bg-gradient-to-r from-yellow-500 to-orange-500 text-white animate-pulse">
+                    ⏳
+                  </div>
+                  <div className="text-3xl opacity-20 group-hover:opacity-40 transition-opacity">⏳</div>
+                </div>
+                <div className="stats-label">Pending Withdrawals</div>
+                <div className="stats-value text-yellow-600 group-hover:scale-110 transition-transform">12</div>
+              </div>
+              <div className="stats-card group cursor-pointer hover:shadow-2xl">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="stats-icon bg-gradient-to-r from-purple-500 to-pink-500 text-white animate-pulse">
+                    💰
+                  </div>
+                  <div className="text-3xl opacity-20 group-hover:opacity-40 transition-opacity">💰</div>
+                </div>
+                <div className="stats-label">Total Revenue</div>
+                <div className="stats-value text-purple-600 group-hover:scale-110 transition-transform">$12,345</div>
+              </div>
             </div>
-            <div className="stats-card">
-              <div className="stats-icon bg-green-100 text-green-600 mb-4">
-                ✅
+            
+            {/* Quick Actions */}
+            <div className="card bg-gradient-to-r from-gray-800 to-gray-900 text-white">
+              <h3 className="text-2xl font-bold mb-6">Quick Actions</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button className="bg-white/10 hover:bg-white/20 p-4 rounded-lg text-left transition-all duration-300 transform hover:scale-105">
+                  <div className="text-3xl mb-2">✨</div>
+                  <div className="font-semibold">Approve Users</div>
+                  <div className="text-sm opacity-75">Review pending accounts</div>
+                </button>
+                <button className="bg-white/10 hover:bg-white/20 p-4 rounded-lg text-left transition-all duration-300 transform hover:scale-105">
+                  <div className="text-3xl mb-2">📊</div>
+                  <div className="font-semibold">View Analytics</div>
+                  <div className="text-sm opacity-75">Check platform stats</div>
+                </button>
+                <button className="bg-white/10 hover:bg-white/20 p-4 rounded-lg text-left transition-all duration-300 transform hover:scale-105">
+                  <div className="text-3xl mb-2">⚙️</div>
+                  <div className="font-semibold">Manage Settings</div>
+                  <div className="text-sm opacity-75">Configure platform</div>
+                </button>
               </div>
-              <div className="stats-label">Active Tasks</div>
-              <div className="stats-value text-green-600">45</div>
-            </div>
-            <div className="stats-card">
-              <div className="stats-icon bg-yellow-100 text-yellow-600 mb-4">
-                ⏳
-              </div>
-              <div className="stats-label">Pending Withdrawals</div>
-              <div className="stats-value text-yellow-600">12</div>
-            </div>
-            <div className="stats-card">
-              <div className="stats-icon bg-purple-100 text-purple-600 mb-4">
-                💰
-              </div>
-              <div className="stats-label">Total Revenue</div>
-              <div className="stats-value text-purple-600">$12,345</div>
             </div>
           </div>
         )}
 
         {activeTab === 'users' && (
           <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
+            <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
               <h3 className="text-lg font-medium">User Management</h3>
+              <button onClick={addNewUser} className="btn-primary">
+                + Add User
+              </button>
             </div>
             <div className="overflow-x-auto">
               <table className="table">
@@ -1374,7 +1642,12 @@ function AdminDashboard() {
                           >
                             Set Level
                           </button>
-                          <button className="text-blue-600 hover:text-blue-900 font-medium">Edit</button>
+                          <button 
+                            onClick={() => editUser(user.id)}
+                            className="text-blue-600 hover:text-blue-900 font-medium"
+                          >
+                            Edit
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -2071,6 +2344,7 @@ function App() {
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/dashboard" component={Dashboard} />
+          <Route path="/profile" component={Profile} />
           <Route path="/tasks" component={Tasks} />
           <Route path="/referrals" component={Referrals} />
           <Route path="/withdrawals" component={Withdrawals} />
