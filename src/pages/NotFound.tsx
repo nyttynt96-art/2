@@ -21,7 +21,16 @@ export default function NotFound() {
         {/* Header */}
         <div className="text-center mb-8 animate-fade-in">
           <div className="flex items-center justify-center space-x-3 mb-4 hover-lift">
-            <img src="/logo.png" onError={(e) => { (e.target as HTMLImageElement).src = '/promohive-logo.png'; }} alt="PromoHive" className="h-12 w-12 float-animation" />
+            <div 
+              className="rounded-lg flex items-center justify-center font-bold text-white shadow-lg float-animation"
+              style={{
+                width: 48,
+                height: 48,
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              }}
+            >
+              <span style={{ fontSize: 24 }}>P</span>
+            </div>
             <div>
               <h1 className="text-2xl font-bold text-gray-900 font-display">PromoHive</h1>
               <p className="text-sm text-gray-600">Global Promo Network</p>
