@@ -17,5 +17,20 @@
     "types": ["node"]
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "src/pages/**/*", "src/components/**/*", "src/main.tsx", "src/App.tsx", "prisma/**/*"]
+  "exclude": [
+    "node_modules", 
+    "dist", 
+    "src/pages/**/*", 
+    "src/components/**/*", 
+    "src/main.tsx", 
+    "src/App.tsx", 
+    "prisma/**/*",
+    "src/_core/hooks/**/*",
+    "src/contexts/**/*",
+    "src/hooks/**/*",
+    "src/lib/trpc.ts",
+    "src/lib/api.ts",
+    "src/utils/animations.ts",
+    "src/tests/**/*"
+  ]
 }
