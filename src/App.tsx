@@ -218,6 +218,33 @@ function Home() {
         </div>
       </section>
 
+      {/* Live Stats Section */}
+      <section className="py-12 bg-gradient-to-r from-cyan-600 via-purple-600 to-pink-600">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div className="text-center p-6 bg-white/10 backdrop-blur-lg rounded-xl border border-white/20">
+              <div className="text-5xl font-bold text-white mb-2 animate-pulse">$127,845</div>
+              <div className="text-white/80 text-sm font-medium">Total Earnings Paid</div>
+            </div>
+            
+            <div className="text-center p-6 bg-white/10 backdrop-blur-lg rounded-xl border border-white/20">
+              <div className="text-5xl font-bold text-white mb-2 animate-pulse">12,847</div>
+              <div className="text-white/80 text-sm font-medium">Active Users</div>
+            </div>
+            
+            <div className="text-center p-6 bg-white/10 backdrop-blur-lg rounded-xl border border-white/20">
+              <div className="text-5xl font-bold text-white mb-2 animate-pulse">45,239</div>
+              <div className="text-white/80 text-sm font-medium">Tasks Completed</div>
+            </div>
+            
+            <div className="text-center p-6 bg-white/10 backdrop-blur-lg rounded-xl border border-white/20">
+              <div className="text-5xl font-bold text-white mb-2 animate-pulse">$8,521</div>
+              <div className="text-white/80 text-sm font-medium">Pending Withdrawals</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4">
@@ -1436,6 +1463,27 @@ function AdminDashboard() {
 
   const approveUser = (userId) => {
     setUsers(users.map(u => u.id === userId ? { ...u, isApproved: true } : u))
+    // Mark notification as read
+    const userToApprove = users.find(u => u.id === userId)
+    if (userToApprove) {
+      const notificationId = Date.now()
+      setNotifications(prev => prev.map(n => 
+        n.message.includes(userToApprove.name) ? { ...n, read: true } : n
+      ).concat({
+        id: notificationId,
+        type: 'approval',
+        message: `${userToApprove.name} approved successfully!`,
+        time: 'Just now',
+        read: false
+      }))
+      alert('User approved successfully!')
+    }
+  }
+  
+  const markNotificationAsRead = (notifId) => {
+    setNotifications(prev => prev.map(n => 
+      n.id === notifId ? { ...n, read: true } : n
+    ))
   }
 
   const addUSDTAddress = () => {
@@ -1567,14 +1615,20 @@ function AdminDashboard() {
   const unreadCount = notifications.filter(n => !n.read).length
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-pink-500/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }}></div>
+      </div>
+      
       <Navigation user={user} onLogout={logout} />
       
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-8 relative z-10">
         <div className="mb-8 flex items-center justify-between">
           <div>
-            <h1 className="text-4xl font-bold gradient-text mb-2">Admin Dashboard</h1>
-            <p className="text-gray-600">Manage your platform</p>
+            <h1 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">🛠️ Admin Dashboard</h1>
+            <p className="text-white opacity-90">Manage your platform</p>
           </div>
           <div className="relative">
             <button
@@ -1596,27 +1650,37 @@ function AdminDashboard() {
                   <button onClick={() => setShowNotifications(false)} className="text-gray-500 hover:text-gray-700">✕</button>
                 </div>
                 <div className="max-h-96 overflow-y-auto">
-                  {notifications.map(notif => (
-                    <div
-                      key={notif.id}
-                      className={`p-4 border-b border-gray-200 hover:bg-gray-50 transition-colors ${
-                        !notif.read ? 'bg-blue-50' : ''
-                      }`}
-                    >
-                      <div className="flex items-start space-x-3">
-                        <div className="text-2xl">
-                          {notif.type === 'new_user' && '👤'}
-                          {notif.type === 'withdrawal' && '💰'}
-                          {notif.type === 'upgrade' && '⭐'}
-                        </div>
-                        <div className="flex-1">
-                          <p className="font-medium text-gray-900">{notif.message}</p>
-                          <p className="text-sm text-gray-500">{notif.time}</p>
-                        </div>
-                        {!notif.read && <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>}
-                      </div>
+                  {notifications.length === 0 ? (
+                    <div className="p-8 text-center text-gray-500">
+                      <p>No notifications yet</p>
                     </div>
-                  ))}
+                  ) : (
+                    notifications.map(notif => (
+                      <div
+                        key={notif.id}
+                        onClick={() => markNotificationAsRead(notif.id)}
+                        className={`p-4 border-b border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer ${
+                          !notif.read ? 'bg-blue-50' : ''
+                        }`}
+                      >
+                        <div className="flex items-start space-x-3">
+                          <div className="text-2xl">
+                            {notif.type === 'new_user' && '👤'}
+                            {notif.type === 'withdrawal' && '💰'}
+                            {notif.type === 'upgrade' && '⭐'}
+                            {notif.type === 'approval' && '✅'}
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-medium text-gray-900">{notif.message}</p>
+                            <p className="text-sm text-gray-500">{notif.time}</p>
+                          </div>
+                          {!notif.read && (
+                            <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             )}
