@@ -7,12 +7,15 @@
 
 /* Custom CSS Variables */
 :root {
-  --primary-blue: #3B82F6;
-  --primary-pink: #EC4899;
-  --primary-purple: #8B5CF6;
-  --primary-green: #10B981;
-  --primary-orange: #F59E0B;
-  --primary-red: #EF4444;
+  --primary-orange: #F97316;
+  --primary-red: #DC2626;
+  --primary-deep-orange: #EA580C;
+  --primary-fire: #FD7E14;
+  --primary-gold: #FFA500;
+  --accent-orange: #FB923C;
+  --accent-red: #EF4444;
+  --gradient-start: #F97316;
+  --gradient-end: #DC2626;
   --dark-bg: #0F172A;
   --dark-card: #1E293B;
   --dark-border: #334155;
@@ -41,22 +44,22 @@ body {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--primary-blue), var(--primary-pink));
+  background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .gradient-bg {
-  background: linear-gradient(135deg, var(--primary-blue), var(--primary-pink));
+  background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
 }
 
 .gradient-bg-secondary {
-  background: linear-gradient(135deg, var(--primary-purple), var(--primary-orange));
+  background: linear-gradient(135deg, var(--primary-fire), var(--primary-red));
 }
 
 .gradient-bg-success {
-  background: linear-gradient(135deg, var(--primary-green), var(--primary-blue));
+  background: linear-gradient(135deg, var(--primary-orange), var(--primary-gold));
 }
 
 /* Card Styles */
@@ -75,28 +78,32 @@ body {
 
 /* Button Styles */
 .btn-primary {
-  @apply bg-gradient-to-r from-blue-500 to-pink-500 text-white px-6 py-3 rounded-lg font-semibold hover:from-blue-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg;
+  background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+  @apply text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all duration-300 transform hover:scale-105 shadow-lg;
 }
 
 .btn-secondary {
-  @apply bg-gradient-to-r from-purple-500 to-orange-500 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-600 hover:to-orange-600 transition-all duration-300 transform hover:scale-105 shadow-lg;
+  background: linear-gradient(135deg, var(--primary-fire), var(--primary-deep-orange));
+  @apply text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all duration-300 transform hover:scale-105 shadow-lg;
 }
 
 .btn-success {
-  @apply bg-gradient-to-r from-green-500 to-blue-500 text-white px-6 py-3 rounded-lg font-semibold hover:from-green-600 hover:to-blue-600 transition-all duration-300 transform hover:scale-105 shadow-lg;
+  background: linear-gradient(135deg, var(--primary-orange), var(--primary-gold));
+  @apply text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all duration-300 transform hover:scale-105 shadow-lg;
 }
 
 .btn-danger {
-  @apply bg-gradient-to-r from-red-500 to-pink-500 text-white px-6 py-3 rounded-lg font-semibold hover:from-red-600 hover:to-pink-600 transition-all duration-300 transform hover:scale-105 shadow-lg;
+  background: linear-gradient(135deg, var(--primary-red), var(--primary-deep-orange));
+  @apply text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-all duration-300 transform hover:scale-105 shadow-lg;
 }
 
 .btn-outline {
-  @apply border-2 border-blue-500 text-blue-500 px-6 py-3 rounded-lg font-semibold hover:bg-blue-500 hover:text-white transition-all duration-300;
+  @apply border-2 border-orange-500 text-orange-500 px-6 py-3 rounded-lg font-semibold hover:bg-orange-500 hover:text-white transition-all duration-300;
 }
 
 /* Form Styles */
 .form-input {
-  @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300;
+  @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300;
 }
 
 .form-input:focus {
@@ -104,7 +111,7 @@ body {
 }
 
 .form-select {
-  @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300;
+  @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition-all duration-300;
 }
 
 /* Animation Classes */

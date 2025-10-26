@@ -116,7 +116,7 @@ function Home() {
       
       {/* Hero Section */}
       <section className="relative py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 via-purple-600 to-pink-600 opacity-90"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-500 via-red-600 to-orange-700 opacity-90"></div>
         <div className="absolute inset-0 bg-black opacity-20"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 text-center">
@@ -136,7 +136,7 @@ function Home() {
               </a>
               <a 
                 href="/login" 
-                className="btn-outline text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-blue-600"
+                className="btn-outline text-lg px-8 py-4 border-white text-white hover:bg-white hover:text-orange-600"
               >
                 Login
               </a>
