@@ -11,10 +11,24 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Get sender information
+const getSenderInfo = () => {
+  const fromEmail = process.env.SMTP_FROM || 'promohive@globalpromonetwork.store';
+  const fromName = process.env.SMTP_NAME || 'PromoHive';
+  
+  // If SMTP_FROM contains full format like "Name <email@domain.com>", use it as is
+  if (fromEmail.includes('<') && fromEmail.includes('>')) {
+    return fromEmail;
+  }
+  
+  // Otherwise, format it properly
+  return `${fromName} <${fromEmail}>`;
+};
+
 export const sendWelcomeEmail = async (email: string, fullName: string) => {
   try {
     const mailOptions = {
-      from: process.env.SMTP_FROM || 'noreply@promohive.com',
+      from: getSenderInfo(),
       to: email,
       subject: 'Welcome to PromoHive - Account Under Review',
       html: `
@@ -69,7 +83,7 @@ export const sendWelcomeEmail = async (email: string, fullName: string) => {
 export const sendApprovalEmail = async (email: string, fullName: string) => {
   try {
     const mailOptions = {
-      from: process.env.SMTP_FROM || 'noreply@promohive.com',
+      from: getSenderInfo(),
       to: email,
       subject: 'PromoHive Account Approved - Start Earning Now!',
       html: `
@@ -130,7 +144,7 @@ export const sendApprovalEmail = async (email: string, fullName: string) => {
 export const sendMagicLinkEmail = async (email: string, fullName: string, magicLink: string) => {
   try {
     const mailOptions = {
-      from: process.env.SMTP_FROM || 'noreply@promohive.com',
+      from: getSenderInfo(),
       to: email,
       subject: 'PromoHive Magic Link - Secure Login',
       html: `
