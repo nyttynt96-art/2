@@ -32,6 +32,7 @@
     "src/lib/trpc.ts",
     "src/lib/api.ts",
     "src/utils/animations.ts",
-    "src/tests/**/*"
+    "src/tests/**/*",
+    "src/App_NEW.tsx"
   ]
 }
