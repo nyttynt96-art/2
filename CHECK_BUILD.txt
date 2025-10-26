@@ -1,0 +1,34 @@
+# التحقق من أن التعديل مطبق على السيرفر
+
+## على السيرفر، نفذ هذا الأمر للتحقق:
+
+```bash
+cd /var/www/promohive
+cat dist/index.js | grep -A2 "trust proxy"
+```
+
+يجب أن يظهر:
+```
+// Trust proxy (for Nginx reverse proxy)
+// Only trust the first proxy (more secure than true)
+app.set('trust proxy', 1);
+```
+
+## إذا كان الكود القديم لا يزال موجود:
+
+```bash
+cd /var/www/promohive
+git pull origin main
+npm run build
+pm2 restart promohive-server
+pm2 save
+```
+
+## التحقق من عدم وجود أخطاء جديدة:
+
+```bash
+pm2 logs promohive-server --lines 50 --nostream
+```
+
+يجب ألا تظهر أخطاء ERR_ERL_PERMISSIVE_TRUST_PROXY بعد هذا.
+
