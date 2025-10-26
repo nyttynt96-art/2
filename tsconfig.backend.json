@@ -33,6 +33,8 @@
     "src/lib/api.ts",
     "src/utils/animations.ts",
     "src/tests/**/*",
-    "src/App_NEW.tsx"
+    "src/App_NEW.tsx",
+    "src/App_CLEAN.tsx",
+    "src/App_FINAL.tsx"
   ]
 }
