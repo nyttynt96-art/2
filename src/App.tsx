@@ -1378,7 +1378,7 @@ function AdminDashboard() {
                 {usdtAddresses.map(address => (
                   <div key={address.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                     <div className="flex-1">
-                      <p className="font-mono text-sm mb-2">{address.address}</p>
+                      <p className="font-mono text-sm font-semibold text-gray-800 mb-2">{address.address}</p>
                       <div className="flex gap-2">
                         <span className="badge badge-primary">{address.network}</span>
                         <span className={`badge ${address.isActive ? 'badge-success' : 'badge-danger'}`}>
@@ -1912,7 +1912,9 @@ function Withdrawals() {
                   step="0.01"
                   required
                 />
-                <p className="text-sm text-gray-500 mt-1">Available balance: ${balance}</p>
+                <p className="text-sm text-gray-500 mt-1">
+                  Available balance: ${balance} | <span className="font-bold text-orange-600">Minimum: $10</span>
+                </p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">USDT Wallet Address</label>

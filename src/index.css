@@ -12,10 +12,14 @@
   --primary-deep-orange: #EA580C;
   --primary-fire: #FD7E14;
   --primary-gold: #FFA500;
+  --primary-cyan: #00E5FF;
+  --primary-purple: #9333EA;
+  --primary-pink: #EC4899;
   --accent-orange: #FB923C;
   --accent-red: #EF4444;
-  --gradient-start: #F97316;
-  --gradient-end: #DC2626;
+  --gradient-start: #00E5FF;
+  --gradient-mid: #9333EA;
+  --gradient-end: #EC4899;
   --dark-bg: #0F172A;
   --dark-card: #1E293B;
   --dark-border: #334155;
@@ -32,8 +36,19 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #000000 0%, #1a0d28 50%, #000000 100%);
+  background-attachment: fixed;
   min-height: 100vh;
+}
+
+/* Fix wallet address text color */
+.font-mono {
+  @apply text-gray-800;
+}
+
+.font-mono.text-sm {
+  @apply text-gray-800;
+  @apply font-semibold;
 }
 
 /* Custom Components */
@@ -44,22 +59,22 @@ body {
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+  background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .gradient-bg {
-  background: linear-gradient(135deg, var(--primary-orange), var(--primary-red));
+  background: linear-gradient(135deg, var(--primary-cyan), var(--primary-purple), var(--primary-pink));
 }
 
 .gradient-bg-secondary {
-  background: linear-gradient(135deg, var(--primary-fire), var(--primary-red));
+  background: linear-gradient(135deg, var(--primary-fire), var(--primary-deep-orange));
 }
 
 .gradient-bg-success {
-  background: linear-gradient(135deg, var(--primary-orange), var(--primary-gold));
+  background: linear-gradient(135deg, var(--primary-cyan), var(--primary-pink));
 }
 
 /* Card Styles */
