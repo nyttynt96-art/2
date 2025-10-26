@@ -1703,34 +1703,29 @@ function AdminDashboard() {
         </div>
         
         {/* Admin Tabs */}
-        <div className="card mb-8">
-          <div className="border-b border-gray-200">
-            <nav className="-mb-px flex flex-wrap gap-2 px-6 py-4">
-              {[
-                { id: 'overview', name: 'Overview', icon: '📊' },
-                { id: 'users', name: 'Users', icon: '👥' },
-                { id: 'tasks', name: 'Tasks', icon: '📋' },
-                { id: 'usdt', name: 'USDT Addresses', icon: '💎' },
-                { id: 'withdrawals', name: 'Withdrawals', icon: '💰' },
-                { id: 'settings', name: 'Settings', icon: '⚙️' }
-              ].map(tab => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`group flex items-center space-x-2 px-4 py-3 rounded-lg font-medium text-sm transition-all duration-300 transform hover:scale-105 ${
-                    activeTab === tab.id
-                      ? 'bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 text-white shadow-lg'
-                      : 'bg-white text-gray-700 hover:bg-gray-100 hover:shadow-md border border-gray-200'
-                  }`}
-                >
-                  <span className={`text-xl ${activeTab === tab.id ? 'animate-pulse' : ''}`}>{tab.icon}</span>
-                  <span>{tab.name}</span>
-                  {activeTab === tab.id && (
-                    <div className="absolute -bottom-1 left-0 right-0 h-1 bg-white/50 rounded-full"></div>
-                  )}
-                </button>
-              ))}
-            </nav>
+        <div className="glass-effect rounded-xl p-6 mb-8 shadow-2xl backdrop-blur-xl border border-white/10">
+          <div className="flex flex-wrap gap-2 justify-center">
+            {[
+              { id: 'overview', name: 'Overview', icon: '📊' },
+              { id: 'users', name: 'Users', icon: '👥' },
+              { id: 'tasks', name: 'Tasks', icon: '📋' },
+              { id: 'usdt', name: 'USDT Addresses', icon: '💎' },
+              { id: 'withdrawals', name: 'Withdrawals', icon: '💰' },
+              { id: 'settings', name: 'Settings', icon: '⚙️' }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`group flex items-center space-x-2 px-5 py-3 rounded-xl font-medium text-sm transition-all duration-300 transform hover:scale-110 ${
+                  activeTab === tab.id
+                    ? 'bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 text-white shadow-2xl scale-105'
+                    : 'glass-effect text-white hover:bg-white/20 shadow-lg border border-white/20'
+                }`}
+              >
+                <span className={`text-xl ${activeTab === tab.id ? 'animate-pulse' : 'group-hover:scale-125 transition-transform'}`}>{tab.icon}</span>
+                <span>{tab.name}</span>
+              </button>
+            ))}
           </div>
         </div>
 
