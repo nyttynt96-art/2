@@ -124,7 +124,7 @@ export default function AdminDashboard() {
                   Back to Dashboard
                 </Button>
               </Link>
-              <img src="/logo.png" alt="PromoHive" className="h-10 w-10 float-animation brightness-110" />
+              <img src="/logo.png" onError={(e) => { (e.target as HTMLImageElement).src = '/promohive-logo.png'; }} alt="PromoHive" className="h-10 w-10 float-animation brightness-110" />
               <div>
                 <h1 className="text-2xl font-bold text-white font-display drop-shadow-lg">Admin Dashboard</h1>
                 <p className="text-sm text-slate-300">Manage your platform</p>

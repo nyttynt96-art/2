@@ -13,7 +13,7 @@ export default function Home() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3 hover-lift">
-              <img src="/logo.png" alt="PromoHive" className="h-10 w-10 float-animation brightness-110" />
+              <img src="/logo.png" onError={(e) => { (e.target as HTMLImageElement).src = '/promohive-logo.png'; }} alt="PromoHive" className="h-10 w-10 float-animation brightness-110" />
               <div>
                 <h1 className="text-2xl font-bold text-white font-display drop-shadow-lg">PromoHive</h1>
                 <p className="text-sm text-slate-300">Global Promo Network</p>
@@ -345,7 +345,7 @@ export default function Home() {
           <div className="grid md:grid-cols-4 gap-8">
             <div className="animate-fade-in">
               <div className="flex items-center space-x-3 mb-4 hover-lift">
-                <img src="/logo.png" alt="PromoHive" className="h-8 w-8 float-animation" />
+                <img src="/logo.png" onError={(e) => { (e.target as HTMLImageElement).src = '/promohive-logo.png'; }} alt="PromoHive" className="h-8 w-8 float-animation" />
                 <div>
                   <h3 className="text-xl font-bold font-display">PromoHive</h3>
                   <p className="text-sm text-gray-400">Global Promo Network</p>

@@ -102,7 +102,7 @@ export default function Login() {
             </Button>
           </Link>
           <div className="flex items-center justify-center space-x-3 mb-4 hover-lift">
-            <img src="/logo.png" alt="PromoHive" className="h-12 w-12 float-animation" />
+            <img src="/logo.png" onError={(e) => { (e.target as HTMLImageElement).src = '/promohive-logo.png'; }} alt="PromoHive" className="h-12 w-12 float-animation" />
             <div>
               <h1 className="text-2xl font-bold text-gray-900 font-display">PromoHive</h1>
               <p className="text-sm text-gray-600">Global Promo Network</p>

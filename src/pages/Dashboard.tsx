@@ -161,7 +161,7 @@ export default function Dashboard() {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3 hover-lift">
-              <img src="/logo.png" alt="PromoHive" className="h-10 w-10 float-animation brightness-110" />
+              <img src="/logo.png" onError={(e) => { (e.target as HTMLImageElement).src = '/promohive-logo.png'; }} alt="PromoHive" className="h-10 w-10 float-animation brightness-110" />
               <div>
                 <h1 className="text-2xl font-bold text-white font-display drop-shadow-lg">PromoHive</h1>
                 <p className="text-sm text-slate-300">Welcome back, {user.fullName}!</p>
