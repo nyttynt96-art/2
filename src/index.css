@@ -39,6 +39,8 @@ body {
   background: linear-gradient(135deg, #000000 0%, #1a0d28 50%, #000000 100%);
   background-attachment: fixed;
   min-height: 100vh;
+  direction: ltr;
+  text-align: left;
 }
 
 /* Fix wallet address text color */
