@@ -455,7 +455,7 @@ router.get('/dashboard', asyncHandler(async (req: AuthenticatedRequest, res) => 
 
   res.json({
     success: true,
-    dashboard: {
+    data: {
       user: {
         id: user.id,
         username: user.username,
