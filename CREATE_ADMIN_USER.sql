@@ -1,50 +1,39 @@
--- Create Admin User
--- Run this SQL script to create an admin user
+-- Create Admin User for PromoHive
+-- Password: Admin@123
 
--- First, check if user exists
-DO $$
-DECLARE
-    admin_exists INTEGER;
-BEGIN
-    SELECT COUNT(*) INTO admin_exists FROM "User" WHERE email = 'admin@promohive.com';
-    
-    IF admin_exists = 0 THEN
-        -- User doesn't exist, create it
-        INSERT INTO "User" (
-            "id",
-            "username",
-            "email",
-            "password",
-            "fullName",
-            "role",
-            "level",
-            "isApproved",
-            "isSuspended",
-            "referralCode",
-            "createdAt",
-            "updatedAt"
-        ) VALUES (
-            gen_random_uuid()::text,
-            'admin',
-            'admin@promohive.com',
-            '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5hFLFkWM3v3ge', -- Password: Admin@123
-            'System Administrator',
-            'SUPER_ADMIN',
-            10,
-            true,
-            false,
-            'ADMIN01',
-            NOW(),
-            NOW()
-        );
-        
-        RAISE NOTICE 'Admin user created: admin@promohive.com / Admin@123';
-    ELSE
-        RAISE NOTICE 'Admin user already exists';
-    END IF;
-END $$;
+-- Insert admin user if not exists
+INSERT INTO "User" (
+    "id",
+    "username",
+    "email",
+    "password",
+    "fullName",
+    "role",
+    "level",
+    "isApproved",
+    "isSuspended",
+    "referralCode",
+    "createdAt",
+    "updatedAt"
+) 
+SELECT 
+    gen_random_uuid()::text,
+    'admin',
+    'admin@promohive.com',
+    '$2b$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LewY5hFLFkWM3v3ge',
+    'System Administrator',
+    'SUPER_ADMIN',
+    10,
+    true,
+    false,
+    'ADMIN01',
+    NOW(),
+    NOW()
+WHERE NOT EXISTS (
+    SELECT 1 FROM "User" WHERE email = 'admin@promohive.com'
+);
 
--- Create admin wallet
+-- Create admin wallet if not exists
 INSERT INTO "Wallet" (
     "id",
     "userId",
@@ -57,17 +46,17 @@ INSERT INTO "Wallet" (
 )
 SELECT 
     gen_random_uuid()::text,
-    "id",
+    u."id",
     0,
     0,
     0,
     0,
     NOW(),
     NOW()
-FROM "User"
-WHERE email = 'admin@promohive.com'
+FROM "User" u
+WHERE u.email = 'admin@promohive.com'
 AND NOT EXISTS (
-    SELECT 1 FROM "Wallet" WHERE "userId" = "User"."id"
+    SELECT 1 FROM "Wallet" w WHERE w."userId" = u."id"
 );
 
 -- Display admin user info
