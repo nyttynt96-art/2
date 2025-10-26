@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Route, Switch } from 'wouter'
+import Dashboard from './pages/Dashboard'
+import Tasks from './pages/Tasks'
+import Referrals from './pages/Referrals'
+import Withdrawals from './pages/Withdrawals'
+import Profile from './pages/Profile'
+import LuckWheel from './pages/LuckWheel'
+import MiningContracts from './pages/MiningContracts'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import NotFound from './pages/NotFound'
 
 // Notification Context
 const NotificationContext = React.createContext()
@@ -679,7 +688,15 @@ function App() {
           <Route path="/" component={Home} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
-          {/* Add other routes as needed */}
+          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/tasks" component={Tasks} />
+          <Route path="/referrals" component={Referrals} />
+          <Route path="/withdrawals" component={Withdrawals} />
+          <Route path="/profile" component={Profile} />
+          <Route path="/luck-wheel" component={LuckWheel} />
+          <Route path="/mining" component={MiningContracts} />
+          <Route path="/admin" component={AdminDashboard} />
+          <Route component={NotFound} />
         </Switch>
       </AuthProvider>
     </NotificationProvider>
