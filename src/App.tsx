@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { Route, Switch } from 'wouter'
 import LevelUpgrade from './pages/LevelUpgrade'
+import LoginPage from './pages/Login'
+import RegisterPage from './pages/Register'
+import DashboardPage from './pages/Dashboard'
+import TasksPage from './pages/Tasks'
+import ReferralsPage from './pages/Referrals'
+import WithdrawalsPage from './pages/Withdrawals'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import NotFoundPage from './pages/NotFound'
 
 // Notification Context
 const NotificationContext = React.createContext()
@@ -476,12 +484,6 @@ function Login() {
               Create one here
             </a>
           </p>
-        </div>
-        
-        <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-          <p className="text-sm text-blue-800 font-semibold">Admin Login:</p>
-          <p className="text-sm text-blue-600">Email: admin@promohive.com</p>
-          <p className="text-sm text-blue-600">Password: Admin123!</p>
         </div>
       </div>
     </div>
@@ -2672,18 +2674,18 @@ function App() {
       <AuthProvider>
         <Switch>
           <Route path="/" component={Home} />
-          <Route path="/login" component={Login} />
-          <Route path="/register" component={Register} />
-          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/login" component={LoginPage} />
+          <Route path="/register" component={RegisterPage} />
+          <Route path="/dashboard" component={DashboardPage} />
           <Route path="/profile" component={Profile} />
-          <Route path="/tasks" component={Tasks} />
-          <Route path="/referrals" component={Referrals} />
-          <Route path="/withdrawals" component={Withdrawals} />
+          <Route path="/tasks" component={TasksPage} />
+          <Route path="/referrals" component={ReferralsPage} />
+          <Route path="/withdrawals" component={WithdrawalsPage} />
           <Route path="/level-upgrade" component={LevelUpgrade} />
           <Route path="/luck-wheel" component={LuckWheel} />
           <Route path="/mining" component={MiningContracts} />
           <Route path="/admin" component={AdminDashboard} />
-          <Route component={NotFound} />
+          <Route component={NotFoundPage} />
         </Switch>
       </AuthProvider>
     </NotificationProvider>
