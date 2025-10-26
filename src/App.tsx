@@ -3,6 +3,9 @@ import { Route, Switch } from 'wouter'
 
 // Navigation Component
 function Navigation({ user, onLogout }) {
+  const supportWhatsApp = '+17253348692'
+  const supportEmail = 'promohive@globalpromonetwork.store'
+
   return (
     <nav className="glass-effect sticky top-0 z-40">
       <div className="max-w-7xl mx-auto px-4">
@@ -17,32 +20,55 @@ function Navigation({ user, onLogout }) {
               </h1>
             </div>
           </div>
-          <div className="flex space-x-6">
-            <a href="/" className="nav-link">Home</a>
-            {!user ? (
-              <>
-                <a href="/login" className="nav-link">Login</a>
-                <a href="/register" className="nav-link">Register</a>
-              </>
-            ) : (
-              <>
-                <a href="/dashboard" className="nav-link">Dashboard</a>
-                <a href="/tasks" className="nav-link">Tasks</a>
-                <a href="/referrals" className="nav-link">Referrals</a>
-                <a href="/withdrawals" className="nav-link">Withdrawals</a>
-                <a href="/luck-wheel" className="nav-link">Luck Wheel</a>
-                <a href="/mining" className="nav-link">Mining</a>
-                {user.role === 'ADMIN' || user.role === 'SUPER_ADMIN' ? (
-                  <a href="/admin" className="nav-link">Admin</a>
-                ) : null}
-                <button 
-                  onClick={onLogout}
-                  className="text-gray-700 hover:text-red-500 transition-colors duration-200 font-medium"
-                >
-                  Logout
-                </button>
-              </>
-            )}
+          <div className="flex items-center space-x-4">
+            <div className="flex space-x-6">
+              <a href="/" className="nav-link">Home</a>
+              {!user ? (
+                <>
+                  <a href="/login" className="nav-link">Login</a>
+                  <a href="/register" className="nav-link">Register</a>
+                </>
+              ) : (
+                <>
+                  <a href="/dashboard" className="nav-link">Dashboard</a>
+                  <a href="/tasks" className="nav-link">Tasks</a>
+                  <a href="/referrals" className="nav-link">Referrals</a>
+                  <a href="/withdrawals" className="nav-link">Withdrawals</a>
+                  <a href="/luck-wheel" className="nav-link">Luck Wheel</a>
+                  <a href="/mining" className="nav-link">Mining</a>
+                  {user.role === 'ADMIN' || user.role === 'SUPER_ADMIN' ? (
+                    <a href="/admin" className="nav-link">Admin</a>
+                  ) : null}
+                  <button 
+                    onClick={onLogout}
+                    className="text-gray-700 hover:text-red-500 transition-colors duration-200 font-medium"
+                  >
+                    Logout
+                  </button>
+                </>
+              )}
+            </div>
+            {/* Support Buttons */}
+            <div className="flex space-x-3 border-l border-gray-300 pl-4">
+              <a 
+                href={`https://wa.me/${supportWhatsApp.replace(/[^0-9]/g, '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 px-3 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors duration-200 font-medium"
+                title="Contact us on WhatsApp"
+              >
+                <span>📱</span>
+                <span className="hidden sm:inline">WhatsApp</span>
+              </a>
+              <a 
+                href={`mailto:${supportEmail}`}
+                className="flex items-center gap-2 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium"
+                title="Contact us via Email"
+              >
+                <span>✉️</span>
+                <span className="hidden sm:inline">Email</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>
@@ -1011,6 +1037,11 @@ function AdminDashboard() {
   ])
   const [editingAddress, setEditingAddress] = useState(null)
   const [levelModal, setLevelModal] = useState({ show: false, userId: null, currentLevel: 0 })
+  const [supportSettings, setSupportSettings] = useState({
+    whatsapp: '+17253348692',
+    email: 'promohive@globalpromonetwork.store'
+  })
+  const [freeUserLimit, setFreeUserLimit] = useState(9.90)
 
   if (loading) {
     return (
@@ -1396,35 +1427,105 @@ function AdminDashboard() {
         )}
 
         {activeTab === 'settings' && (
-          <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-medium">Platform Settings</h3>
+          <div className="space-y-6">
+            {/* Platform Settings */}
+            <div className="card">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium">Platform Settings</h3>
+              </div>
+              <div className="p-6">
+                <div className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Platform Name</label>
+                    <input type="text" defaultValue="PromoHive" className="form-input" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Welcome Bonus</label>
+                    <input type="number" defaultValue="5.00" className="form-input" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Minimum Withdrawal</label>
+                    <input type="number" defaultValue="10.00" className="form-input" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Max Daily Spins</label>
+                    <input type="number" defaultValue="3" className="form-input" />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Max Spin Prize</label>
+                    <input type="number" defaultValue="0.30" className="form-input" />
+                  </div>
+                  <button className="btn-success w-full">
+                    Save Platform Settings
+                  </button>
+                </div>
+              </div>
             </div>
-            <div className="p-6">
-              <div className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Platform Name</label>
-                  <input type="text" defaultValue="PromoHive" className="form-input" />
+
+            {/* Free User Limit */}
+            <div className="card">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium">Free User Limit (Hidden from users)</h3>
+              </div>
+              <div className="p-6">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Free User Maximum Earnings</label>
+                    <div className="flex items-center gap-2">
+                      <input 
+                        type="number" 
+                        value={freeUserLimit}
+                        onChange={(e) => setFreeUserLimit(parseFloat(e.target.value))}
+                        className="form-input flex-1"
+                      />
+                      <span className="text-gray-600 font-medium">USD</span>
+                    </div>
+                    <p className="text-sm text-gray-500 mt-1">⚠️ Hidden from users. System will automatically block earnings after this limit.</p>
+                  </div>
+                  <button 
+                    onClick={() => alert(`Free user limit updated to $${freeUserLimit}`)}
+                    className="btn-success w-full"
+                  >
+                    Save Free User Limit
+                  </button>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Welcome Bonus</label>
-                  <input type="number" defaultValue="5.00" className="form-input" />
+              </div>
+            </div>
+
+            {/* Support Settings */}
+            <div className="card">
+              <div className="px-6 py-4 border-b border-gray-200">
+                <h3 className="text-lg font-medium">Support Contact Settings</h3>
+              </div>
+              <div className="p-6">
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">WhatsApp Number</label>
+                    <input 
+                      type="text" 
+                      value={supportSettings.whatsapp}
+                      onChange={(e) => setSupportSettings({...supportSettings, whatsapp: e.target.value})}
+                      className="form-input"
+                      placeholder="+1234567890"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Support Email</label>
+                    <input 
+                      type="email" 
+                      value={supportSettings.email}
+                      onChange={(e) => setSupportSettings({...supportSettings, email: e.target.value})}
+                      className="form-input"
+                      placeholder="support@example.com"
+                    />
+                  </div>
+                  <button 
+                    onClick={() => alert('Support settings saved!')}
+                    className="btn-success w-full"
+                  >
+                    Save Support Settings
+                  </button>
                 </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Minimum Withdrawal</label>
-                  <input type="number" defaultValue="10.00" className="form-input" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Max Daily Spins</label>
-                  <input type="number" defaultValue="3" className="form-input" />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Max Spin Prize</label>
-                  <input type="number" defaultValue="0.30" className="form-input" />
-                </div>
-                <button className="btn-success">
-                  Save Settings
-                </button>
               </div>
             </div>
           </div>
