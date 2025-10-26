@@ -78,9 +78,15 @@ app.get('/health', (_req, res) => {
 // Serve static files from dist
 app.use(express.static(path.join(__dirname, '../dist')));
 
-// Serve React app for all other routes
+// Serve React app for all other routes (must be last)
 app.get('*', (_req, res) => {
-  res.sendFile(path.join(__dirname, '../dist/index.html'));
+  const indexPath = path.join(__dirname, '../dist/index.html');
+  res.sendFile(indexPath, (err) => {
+    if (err) {
+      logger.error('Error sending index.html:', err);
+      res.status(404).json({ error: 'Not found' });
+    }
+  });
 });
 
 // Error handling
