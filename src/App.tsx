@@ -1835,9 +1835,9 @@ function AdminDashboard() {
         )}
 
         {activeTab === 'users' && (
-          <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-              <h3 className="text-lg font-medium">User Management</h3>
+          <div className="card glass-effect border border-white/20">
+            <div className="px-6 py-4 border-b border-white/20 flex justify-between items-center">
+              <h3 className="text-lg font-medium text-white">User Management</h3>
               <button onClick={addNewUser} className="btn-primary">
                 + Add User
               </button>
@@ -1911,9 +1911,9 @@ function AdminDashboard() {
         )}
 
         {activeTab === 'tasks' && (
-          <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-              <h3 className="text-lg font-medium">Task Management</h3>
+          <div className="card glass-effect border border-white/20">
+            <div className="px-6 py-4 border-b border-white/20 flex justify-between items-center">
+              <h3 className="text-lg font-medium text-white">Task Management</h3>
               <button onClick={addTask} className="btn-primary">
                 Add New Task
               </button>
@@ -2013,9 +2013,9 @@ function AdminDashboard() {
         )}
 
         {activeTab === 'withdrawals' && (
-          <div className="card">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h3 className="text-lg font-medium">Withdrawal Requests</h3>
+          <div className="card glass-effect border border-white/20">
+            <div className="px-6 py-4 border-b border-white/20">
+              <h3 className="text-lg font-medium text-white">Withdrawal Requests</h3>
             </div>
             <div className="p-6">
               <div className="text-center text-gray-500 py-8">
@@ -2028,9 +2028,9 @@ function AdminDashboard() {
         {activeTab === 'settings' && (
           <div className="space-y-6">
             {/* Platform Settings */}
-            <div className="card">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium">Platform Settings</h3>
+            <div className="card glass-effect border border-white/20">
+              <div className="px-6 py-4 border-b border-white/20">
+                <h3 className="text-lg font-medium text-white">Platform Settings</h3>
               </div>
               <div className="p-6">
                 <div className="space-y-6">
@@ -2062,9 +2062,9 @@ function AdminDashboard() {
             </div>
 
             {/* Free User Limit */}
-            <div className="card">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium">Free User Limit (Hidden from users)</h3>
+            <div className="card glass-effect border border-white/20">
+              <div className="px-6 py-4 border-b border-white/20">
+                <h3 className="text-lg font-medium text-white">Free User Limit (Hidden from users)</h3>
               </div>
               <div className="p-6">
                 <div className="space-y-4">
@@ -2092,10 +2092,10 @@ function AdminDashboard() {
             </div>
 
             {/* Home Banner Settings */}
-            <div className="card">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium">Home Page Banner Settings</h3>
-                <p className="text-sm text-gray-500 mt-1">Customize the welcome bonus banner on the home page</p>
+            <div className="card glass-effect border border-white/20">
+              <div className="px-6 py-4 border-b border-white/20">
+                <h3 className="text-lg font-medium text-white">Home Page Banner Settings</h3>
+                <p className="text-sm text-white/70 mt-1">Customize the welcome bonus banner on the home page</p>
               </div>
               <div className="p-6">
                 <div className="space-y-4">
@@ -2150,9 +2150,9 @@ function AdminDashboard() {
             </div>
 
             {/* Support Settings */}
-            <div className="card">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h3 className="text-lg font-medium">Support Contact Settings</h3>
+            <div className="card glass-effect border border-white/20">
+              <div className="px-6 py-4 border-b border-white/20">
+                <h3 className="text-lg font-medium text-white">Support Contact Settings</h3>
               </div>
               <div className="p-6">
                 <div className="space-y-4">
