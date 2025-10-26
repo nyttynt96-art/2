@@ -481,7 +481,7 @@ router.post('/users/:id/wallet-adjust', asyncHandler(async (req: AuthenticatedRe
 
   const amount = data.type === 'credit' ? data.amount : -data.amount;
 
-  if (data.type === 'debit' && user.wallet.balance < data.amount) {
+  if (data.type === 'debit' && Number(user.wallet.balance) < data.amount) {
     return res.status(400).json({ error: 'Insufficient balance' });
   }
 
@@ -930,7 +930,7 @@ router.post('/withdrawals/:id/process', asyncHandler(async (req: AuthenticatedRe
       await sendWithdrawalRejectedEmail(
         withdrawal.user.email, 
         withdrawal.user.fullName, 
-        withdrawal.amount, 
+        Number(withdrawal.amount), 
         rejectionReason || 'No reason provided'
       );
     } catch (error) {

@@ -233,7 +233,7 @@ router.get('/referrals', asyncHandler(async (req: AuthenticatedRequest, res) => 
   // Calculate referral stats
   const totalReferrals = referrals.length;
   const totalBonus = referrals.reduce((sum, ref) => sum + Number(ref.bonus), 0);
-  const activeReferrals = referrals.filter(ref => ref.referred.wallet?.balance > 0).length;
+  const activeReferrals = referrals.filter(ref => Number(ref.referred.wallet?.balance || 0) > 0).length;
 
   res.json({
     success: true,
