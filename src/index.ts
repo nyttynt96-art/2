@@ -19,6 +19,7 @@ import referralsRoutes from './routes/referrals';
 import withdrawalsRoutes from './routes/withdrawals';
 import adminRoutes from './routes/admin';
 import webhooksRoutes from './routes/webhooks';
+import paymentMethodsRoutes from './routes/payment-methods';
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -36,7 +37,7 @@ app.use(helmet({
 }));
 
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:5173',
+  origin: process.env.CORS_ORIGIN || 'http://localhost:5177',
   credentials: true,
 }));
 
@@ -57,7 +58,7 @@ app.use(cookieParser());
 app.use(express.static('dist/client'));
 
 // Health check
-app.get('/health', (req, res) => {
+app.get('/health', (_req, res) => {
   res.json({ 
     status: 'ok', 
     timestamp: new Date().toISOString(),
@@ -73,9 +74,10 @@ app.use('/api/referrals', authMiddleware, referralsRoutes);
 app.use('/api/withdrawals', authMiddleware, withdrawalsRoutes);
 app.use('/api/admin', authMiddleware, adminRoutes);
 app.use('/api/webhooks', webhooksRoutes);
+app.use('/api/payment-methods', paymentMethodsRoutes);
 
 // Serve React app for all other routes
-app.get('*', (req, res) => {
+app.get('*', (_req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 

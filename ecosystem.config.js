@@ -1,11 +1,12 @@
 module.exports = {
   apps: [{
     name: 'promohive-server',
-    script: './server/dist/index.js',
-    instances: 'max',
+    script: 'dist/index.js',
+    instances: 2,
     exec_mode: 'cluster',
     env: {
       NODE_ENV: 'production',
+      PORT: 3002,
     },
     error_file: './logs/pm2-error.log',
     out_file: './logs/pm2-out.log',
@@ -14,6 +15,8 @@ module.exports = {
     autorestart: true,
     watch: false,
     max_memory_restart: '1G',
+    min_uptime: '10s',
+    max_restarts: 10,
   }],
 };
 

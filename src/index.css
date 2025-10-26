@@ -79,7 +79,10 @@ body {
 
 /* Card Styles */
 .card {
-  @apply bg-white rounded-xl shadow-lg p-6 border border-gray-100;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  @apply rounded-xl shadow-lg p-6;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   transition: all 0.3s ease;
 }
 
@@ -89,6 +92,64 @@ body {
 
 .card-dark {
   @apply bg-gray-800 border-gray-700 text-white;
+}
+
+/* Sidebar Styles - Dark and clear text */
+.bg-sidebar {
+  background: rgb(15, 23, 42) !important;
+  opacity: 0.98 !important;
+}
+
+.text-sidebar-foreground {
+  color: rgba(255, 255, 255, 0.98) !important;
+  font-weight: 500;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.text-sidebar-foreground\/70 {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.bg-sidebar-accent {
+  background: rgba(255, 255, 255, 0.15) !important;
+  border-left: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.text-sidebar-accent-foreground {
+  color: rgba(255, 255, 255, 1) !important;
+  font-weight: 600;
+}
+
+/* Sidebar Menu Button Styles */
+.sidebar-menu-button {
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  margin: 2px 8px;
+}
+
+.sidebar-menu-button:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
+  transform: translateX(4px);
+}
+
+.sidebar-menu-button[data-active="true"] {
+  background: rgba(255, 255, 255, 0.2) !important;
+  font-weight: 600;
+  border-left: 3px solid rgba(255, 255, 255, 0.5);
+}
+
+/* Sidebar Icons */
+.sidebar-icon {
+  filter: brightness(1.2);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Sidebar Footer User Info */
+.sidebar-footer-info {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  padding: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Button Styles */
@@ -279,7 +340,10 @@ body {
 
 /* Stats Card */
 .stats-card {
-  @apply bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  @apply rounded-xl shadow-lg p-6 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1;
 }
 
 .stats-icon {
@@ -312,15 +376,22 @@ body {
 /* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
   .card {
-    @apply bg-gray-800 border-gray-700 text-white;
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    @apply text-white;
   }
   
   .form-input, .form-select {
-    @apply bg-gray-700 border-gray-600 text-white;
+    background: rgba(51, 65, 85, 0.7);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    @apply text-white;
   }
   
   .table-header {
-    @apply bg-gray-800;
+    background: rgba(30, 41, 59, 0.8);
+    backdrop-filter: blur(10px);
   }
   
   .table-row {
@@ -352,6 +423,43 @@ body {
 
 .backdrop-blur {
   backdrop-filter: blur(10px);
+}
+
+/* Unified Dark Header Theme */
+header.bg-gradient-to-r h1,
+header.bg-gradient-to-r h2,
+header.bg-gradient-to-r h3 {
+  color: white !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+header.bg-gradient-to-r img {
+  filter: brightness(1.2) contrast(1.1);
+}
+
+header.bg-gradient-to-r button,
+header.bg-gradient-to-r .text-sm,
+header.bg-gradient-to-r p {
+  color: rgba(255, 255, 255, 0.95);
+}
+
+/* Glass Card Effects */
+.glass-card {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 
+    0 8px 32px 0 rgba(31, 38, 135, 0.15),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+}
+
+.glass-card-dark {
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 32px 0 rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 /* Animation Delays */

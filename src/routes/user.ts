@@ -295,7 +295,9 @@ router.get('/level-requests', asyncHandler(async (req: AuthenticatedRequest, res
 // Request level upgrade
 const levelUpgradeSchema = z.object({
   requestedLevel: z.number().min(1).max(3),
-  proofUrl: z.string().url().optional(),
+  paymentMethodId: z.string().optional(),
+  paymentTxHash: z.string().optional(),
+  paymentAmount: z.number().optional(),
 });
 
 router.post('/level-upgrade', asyncHandler(async (req: AuthenticatedRequest, res) => {
@@ -340,28 +342,57 @@ router.post('/level-upgrade', asyncHandler(async (req: AuthenticatedRequest, res
   });
 
   const upgradeCost = settings.find(s => s.key === `LEVEL_UPGRADE_L${data.requestedLevel}`)?.value || '0';
-  const requiredBalance = parseFloat(upgradeCost);
+  const requiredAmount = parseFloat(upgradeCost);
 
-  if (user.wallet!.balance < requiredBalance) {
+  // Validate payment information
+  if (!data.paymentMethodId) {
     return res.status(400).json({ 
-      error: `Insufficient balance. Required: $${requiredBalance}` 
+      error: 'Payment method is required',
+      availableMethods: await prisma.paymentMethod.findMany({ where: { isActive: true } })
     });
+  }
+
+  if (!data.paymentTxHash) {
+    return res.status(400).json({ error: 'Transaction hash is required' });
+  }
+
+  if (!data.paymentAmount || parseFloat(data.paymentAmount.toString()) < requiredAmount) {
+    return res.status(400).json({ 
+      error: `Invalid payment amount. Required: $${requiredAmount}`,
+      requiredAmount,
+      provided: data.paymentAmount
+    });
+  }
+
+  // Verify payment method exists
+  const paymentMethod = await prisma.paymentMethod.findUnique({
+    where: { id: data.paymentMethodId },
+  });
+
+  if (!paymentMethod) {
+    return res.status(404).json({ error: 'Payment method not found' });
+  }
+
+  if (!paymentMethod.isActive) {
+    return res.status(400).json({ error: 'Payment method is not active' });
   }
 
   const levelRequest = await prisma.levelRequest.create({
     data: {
       userId,
       requestedLevel: data.requestedLevel,
-      proofUrl: data.proofUrl,
+      paymentMethodId: data.paymentMethodId,
+      paymentTxHash: data.paymentTxHash,
+      paymentAmount: data.paymentAmount,
       status: 'PENDING',
     },
   });
 
-  logger.info(`Level upgrade request created for user ${user.email}: Level ${data.requestedLevel}`);
+  logger.info(`Level upgrade request created for user ${user.email}: Level ${data.requestedLevel}, TxHash: ${data.paymentTxHash}`);
 
   res.status(201).json({
     success: true,
-    message: 'Level upgrade request submitted for admin review',
+    message: 'Level upgrade request submitted successfully. Awaiting admin verification.',
     levelRequest,
   });
 }));

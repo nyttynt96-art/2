@@ -114,24 +114,24 @@ export default function AdminDashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+      <header className="bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 backdrop-blur-lg border-b border-slate-600/50 sticky top-0 z-50 shadow-xl">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3 hover-lift">
               <Link href="/dashboard">
-                <Button variant="ghost" className="hover-glow">
+                <Button variant="ghost" className="hover-glow text-white hover:bg-white/10">
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back to Dashboard
                 </Button>
               </Link>
-              <img src="/logo.png" alt="PromoHive" className="h-10 w-10 float-animation" />
+              <img src="/logo.png" alt="PromoHive" className="h-10 w-10 float-animation brightness-110" />
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 font-display">Admin Dashboard</h1>
-                <p className="text-sm text-gray-600">Manage your platform</p>
+                <h1 className="text-2xl font-bold text-white font-display drop-shadow-lg">Admin Dashboard</h1>
+                <p className="text-sm text-slate-300">Manage your platform</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Badge variant="secondary" className="bg-brand-gradient text-white">
+              <Badge variant="secondary" className="bg-gradient-to-r from-amber-500 to-orange-600 text-white shadow-lg border-0 px-3 py-1">
                 <Crown className="h-3 w-3 mr-1" />
                 Admin Panel
               </Badge>

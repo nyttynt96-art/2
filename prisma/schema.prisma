@@ -66,6 +66,7 @@ model User {
   birthdate     DateTime?
   role          UserRole  @default(USER)
   level         Int       @default(0)
+  referralCode  String?   @unique
   isApproved    Boolean   @default(false)
   isSuspended   Boolean   @default(false)
   createdAt     DateTime  @default(now())
@@ -238,21 +239,44 @@ model Withdrawal {
   @@index([status])
 }
 
+model PaymentMethod {
+  id          String    @id @default(cuid())
+  name        String
+  type        String    // "Crypto", "Bank", "PayPal", etc.
+  address     String    // Wallet address or account details
+  network     String?   // Network for crypto payments
+  qrCode      String?   // QR code image URL
+  isActive    Boolean   @default(true)
+  description String?   @db.Text
+  metadata    Json?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  levelRequests LevelRequest[]
+
+  @@index([isActive])
+}
+
 model LevelRequest {
   id              String             @id @default(cuid())
   userId          String
   requestedLevel  Int
   proofUrl        String?
+  paymentMethodId String?
+  paymentTxHash   String?            // Transaction hash from user
+  paymentAmount   Decimal?           @db.Decimal(10, 2)
   status          LevelRequestStatus @default(PENDING)
   rejectionReason String?            @db.Text
   reviewedBy      String?
   reviewedAt      DateTime?
   createdAt       DateTime           @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  paymentMethod PaymentMethod? @relation(fields: [paymentMethodId], references: [id], onDelete: SetNull)
 
   @@index([userId])
   @@index([status])
+  @@index([paymentMethodId])
 }
 
 model AdminAction {

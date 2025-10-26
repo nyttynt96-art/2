@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Route, Switch } from 'wouter'
+import LevelUpgrade from './pages/LevelUpgrade'
 
 // Notification Context
 const NotificationContext = React.createContext()
@@ -2678,6 +2679,7 @@ function App() {
           <Route path="/tasks" component={Tasks} />
           <Route path="/referrals" component={Referrals} />
           <Route path="/withdrawals" component={Withdrawals} />
+          <Route path="/level-upgrade" component={LevelUpgrade} />
           <Route path="/luck-wheel" component={LuckWheel} />
           <Route path="/mining" component={MiningContracts} />
           <Route path="/admin" component={AdminDashboard} />

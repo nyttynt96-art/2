@@ -4,7 +4,14 @@ import { prisma } from '../lib/prisma';
 import { logger } from '../utils/logger';
 import { asyncHandler } from '../middleware/errorHandler';
 import { AuthenticatedRequest, adminMiddleware, superAdminMiddleware } from '../middleware/auth';
-import { sendApprovalEmail } from '../services/email';
+import { 
+  sendApprovalEmail, 
+  sendAccountRejectedEmail,
+  sendWithdrawalApprovedEmail,
+  sendWithdrawalRejectedEmail,
+  sendLevelUpgradeApprovedEmail,
+  sendLevelUpgradeRejectedEmail
+} from '../services/email';
 
 const router = express.Router();
 
@@ -200,6 +207,122 @@ router.post('/users/:id/approve', asyncHandler(async (req: AuthenticatedRequest,
     },
   });
 
+  // Handle referral bonuses for the referrer
+  const referral = await prisma.referral.findUnique({
+    where: { referredId: userId },
+    include: { referrer: { include: { wallet: true } } },
+  });
+
+  if (referral && referral.referrer) {
+    // Get referral bonus settings for different levels
+    const [level1BonusSetting, level2BonusSetting, level3BonusSetting] = await Promise.all([
+      prisma.setting.findUnique({ where: { key: 'REFERRAL_BONUS_LEVEL_1' } }),
+      prisma.setting.findUnique({ where: { key: 'REFERRAL_BONUS_LEVEL_2' } }),
+      prisma.setting.findUnique({ where: { key: 'REFERRAL_BONUS_LEVEL_3' } }),
+    ]);
+
+    const level1Bonus = parseFloat(level1BonusSetting?.value || '2.00');
+    const level2Bonus = parseFloat(level2BonusSetting?.value || '1.00');
+    const level3Bonus = parseFloat(level3BonusSetting?.value || '0.50');
+
+    // Credit Level 1 referrer
+    await prisma.referral.update({
+      where: { id: referral.id },
+      data: {
+        bonus: level1Bonus,
+        isPaid: false,
+      },
+    });
+
+    await prisma.wallet.update({
+      where: { userId: referral.referrer.id },
+      data: {
+        balance: { increment: level1Bonus },
+        totalEarned: { increment: level1Bonus },
+      },
+    });
+
+    await prisma.transaction.create({
+      data: {
+        userId: referral.referrer.id,
+        type: 'REFERRAL_BONUS',
+        amount: level1Bonus,
+        description: `Referral bonus (Level 1) for ${user.fullName}`,
+        metadata: {
+          referredUserId: userId,
+          referredUserName: user.fullName,
+          referralLevel: 1,
+        },
+      },
+    });
+
+    logger.info(`Level 1 referral bonus credited: $${level1Bonus} to ${referral.referrer.email}`);
+
+    // Credit Level 2 referrer (if exists)
+    const level2Referral = await prisma.referral.findUnique({
+      where: { referredId: referral.referrer.id },
+      include: { referrer: { include: { wallet: true } } },
+    });
+
+    if (level2Referral && level2Referral.referrer) {
+      await prisma.wallet.update({
+        where: { userId: level2Referral.referrer.id },
+        data: {
+          balance: { increment: level2Bonus },
+          totalEarned: { increment: level2Bonus },
+        },
+      });
+
+      await prisma.transaction.create({
+        data: {
+          userId: level2Referral.referrer.id,
+          type: 'REFERRAL_BONUS',
+          amount: level2Bonus,
+          description: `Referral bonus (Level 2) for ${user.fullName}`,
+          metadata: {
+            referredUserId: userId,
+            referredUserName: user.fullName,
+            referralLevel: 2,
+          },
+        },
+      });
+
+      logger.info(`Level 2 referral bonus credited: $${level2Bonus} to ${level2Referral.referrer.email}`);
+
+      // Credit Level 3 referrer (if exists)
+      const level3Referral = await prisma.referral.findUnique({
+        where: { referredId: level2Referral.referrer.id },
+        include: { referrer: { include: { wallet: true } } },
+      });
+
+      if (level3Referral && level3Referral.referrer) {
+        await prisma.wallet.update({
+          where: { userId: level3Referral.referrer.id },
+          data: {
+            balance: { increment: level3Bonus },
+            totalEarned: { increment: level3Bonus },
+          },
+        });
+
+        await prisma.transaction.create({
+          data: {
+            userId: level3Referral.referrer.id,
+            type: 'REFERRAL_BONUS',
+            amount: level3Bonus,
+            description: `Referral bonus (Level 3) for ${user.fullName}`,
+            metadata: {
+              referredUserId: userId,
+              referredUserName: user.fullName,
+              referralLevel: 3,
+            },
+          },
+        });
+
+        logger.info(`Level 3 referral bonus credited: $${level3Bonus} to ${level3Referral.referrer.email}`);
+      }
+    }
+  }
+
   // Send approval email
   try {
     await sendApprovalEmail(user.email, user.fullName);
@@ -213,6 +336,78 @@ router.post('/users/:id/approve', asyncHandler(async (req: AuthenticatedRequest,
     success: true,
     message: 'User approved successfully',
     welcomeBonus,
+  });
+}));
+
+// Reject user
+router.post('/users/:id/reject', asyncHandler(async (req: AuthenticatedRequest, res) => {
+  const userId = req.params.id;
+  const adminId = req.user!.id;
+  const { reason } = req.body;
+
+  if (!reason) {
+    return res.status(400).json({ error: 'Rejection reason is required' });
+  }
+
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+  });
+
+  if (!user) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+
+  if (user.isApproved) {
+    return res.status(400).json({ error: 'User is already approved' });
+  }
+
+  // Delete wallet if exists
+  await prisma.wallet.deleteMany({
+    where: { userId },
+  });
+
+  // Delete referrals
+  await prisma.referral.deleteMany({
+    where: {
+      OR: [
+        { referrerId: userId },
+        { referredId: userId },
+      ],
+    },
+  });
+
+  // Delete user
+  await prisma.user.delete({
+    where: { id: userId },
+  });
+
+  // Create admin action record
+  await prisma.adminAction.create({
+    data: {
+      adminId,
+      action: 'USER_REJECTED',
+      targetType: 'USER',
+      targetId: userId,
+      description: `Rejected user ${user.email}: ${reason}`,
+      metadata: {
+        reason,
+        userEmail: user.email,
+      },
+    },
+  });
+
+  // Send rejection email
+  try {
+    await sendAccountRejectedEmail(user.email, user.fullName, reason);
+  } catch (error) {
+    logger.error('Failed to send rejection email:', error);
+  }
+
+  logger.info(`User rejected: ${user.email} by admin ${adminId}`);
+
+  res.json({
+    success: true,
+    message: 'User rejected successfully',
   });
 }));
 
@@ -729,6 +924,18 @@ router.post('/withdrawals/:id/process', asyncHandler(async (req: AuthenticatedRe
         },
       },
     });
+
+    // Send withdrawal rejected email
+    try {
+      await sendWithdrawalRejectedEmail(
+        withdrawal.user.email, 
+        withdrawal.user.fullName, 
+        withdrawal.amount, 
+        rejectionReason || 'No reason provided'
+      );
+    } catch (error) {
+      logger.error('Failed to send withdrawal rejected email:', error);
+    }
   } else if (status === 'COMPLETED') {
     // Update wallet totals
     await prisma.wallet.update({
@@ -738,6 +945,18 @@ router.post('/withdrawals/:id/process', asyncHandler(async (req: AuthenticatedRe
         totalWithdrawn: { increment: withdrawal.amount },
       },
     });
+
+    // Send withdrawal approved email
+    try {
+      await sendWithdrawalApprovedEmail(
+        withdrawal.user.email, 
+        withdrawal.user.fullName, 
+        parseFloat(withdrawal.amount.toString()),
+        txHash || 'Pending'
+      );
+    } catch (error) {
+      logger.error('Failed to send withdrawal approved email:', error);
+    }
   }
 
   // Create admin action record
@@ -799,6 +1018,15 @@ router.get('/level-requests', asyncHandler(async (req: AuthenticatedRequest, res
                 totalEarned: true,
               },
             },
+          },
+        },
+        paymentMethod: {
+          select: {
+            id: true,
+            name: true,
+            type: true,
+            address: true,
+            network: true,
           },
         },
       },
@@ -892,6 +1120,25 @@ router.post('/level-requests/:id/process', asyncHandler(async (req: Authenticate
         },
       },
     });
+  }
+
+  // Send email notification
+  try {
+    if (status === 'APPROVED') {
+      await sendLevelUpgradeApprovedEmail(
+        levelRequest.user.email,
+        levelRequest.user.fullName,
+        levelRequest.requestedLevel
+      );
+    } else {
+      await sendLevelUpgradeRejectedEmail(
+        levelRequest.user.email,
+        levelRequest.user.fullName,
+        rejectionReason || 'No reason provided'
+      );
+    }
+  } catch (error) {
+    logger.error('Failed to send level upgrade email:', error);
   }
 
   // Create admin action record

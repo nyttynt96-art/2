@@ -157,21 +157,21 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+      <header className="bg-gradient-to-r from-slate-800 via-slate-700 to-slate-800 backdrop-blur-lg border-b border-slate-600/50 sticky top-0 z-50 shadow-xl">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3 hover-lift">
-              <img src="/logo.png" alt="PromoHive" className="h-10 w-10 float-animation" />
+              <img src="/logo.png" alt="PromoHive" className="h-10 w-10 float-animation brightness-110" />
               <div>
-                <h1 className="text-2xl font-bold text-gray-900 font-display">PromoHive</h1>
-                <p className="text-sm text-gray-600">Welcome back, {user.fullName}!</p>
+                <h1 className="text-2xl font-bold text-white font-display drop-shadow-lg">PromoHive</h1>
+                <p className="text-sm text-slate-300">Welcome back, {user.fullName}!</p>
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Badge variant="secondary" className={`${getLevelColor(user.level)} text-white`}>
+              <Badge variant="secondary" className={`${getLevelColor(user.level)} text-white shadow-lg`}>
                 Level {user.level}
               </Badge>
-              <Button variant="ghost" onClick={handleLogout} className="hover-glow">
+              <Button variant="ghost" onClick={handleLogout} className="hover-glow text-white hover:bg-white/10">
                 <LogOut className="h-4 w-4 mr-2" />
                 Logout
               </Button>
@@ -361,6 +361,14 @@ export default function Dashboard() {
                       </li>
                     </ul>
                   </div>
+                  {user.level < 3 && (
+                    <Link href="/level-upgrade">
+                      <Button className="w-full btn-primary mt-4">
+                        <Trophy className="h-4 w-4 mr-2" />
+                        Upgrade to Level {user.level + 1}
+                      </Button>
+                    </Link>
+                  )}
                 </div>
               </CardContent>
             </Card>

@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
-import { logger } from './logger';
+import { logger } from '../utils/logger';
 
-const transporter = nodemailer.createTransporter({
+const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.hostinger.com',
   port: parseInt(process.env.SMTP_PORT || '465'),
   secure: process.env.SMTP_SECURE !== 'false', // SSL/TLS enabled by default
@@ -234,7 +234,7 @@ export const sendWithdrawalRequestEmail = async (email: string, fullName: string
 };
 
 // Withdrawal Approved Email
-export const sendWithdrawalApprovedEmail = async (email: string, fullName: string, amount: number) => {
+export const sendWithdrawalApprovedEmail = async (email: string, fullName: string, amount: number, txHash?: string) => {
   try {
     const mailOptions = {
       from: process.env.SMTP_FROM || 'promohive@globalpromonetwork.store',
@@ -259,7 +259,8 @@ export const sendWithdrawalApprovedEmail = async (email: string, fullName: strin
               <p style="color: #155724; margin: 0; line-height: 1.5;">
                 <strong>Amount Sent:</strong> $${amount.toFixed(2)}<br>
                 <strong>Status:</strong> Approved & Processed<br>
-                <strong>Payment Method:</strong> USDT
+                <strong>Payment Method:</strong> USDT<br>
+                ${txHash ? `<strong>Transaction Hash:</strong> ${txHash}` : ''}
               </p>
             </div>
             
@@ -393,6 +394,116 @@ export const sendAccountRejectedEmail = async (email: string, fullName: string, 
     logger.info(`Account rejected email sent to ${email}`);
   } catch (error) {
     logger.error('Failed to send account rejected email:', error);
+    throw error;
+  }
+};
+
+// Level Upgrade Approved Email
+export const sendLevelUpgradeApprovedEmail = async (email: string, fullName: string, newLevel: number) => {
+  try {
+    const mailOptions = {
+      from: process.env.SMTP_FROM || 'promohive@globalpromonetwork.store',
+      to: email,
+      subject: '🎉 Level Upgrade Approved - PromoHive',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+            <h1 style="margin: 0; font-size: 28px;">🎉 Level Upgrade Approved!</h1>
+            <p style="margin: 10px 0 0 0; font-size: 16px;">PromoHive</p>
+          </div>
+          
+          <div style="padding: 30px; background: #f8f9fa;">
+            <h2 style="color: #333; margin-bottom: 20px;">Congratulations ${fullName}! 🎊</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              Your level upgrade request has been approved!
+            </p>
+            
+            <div style="background: #e8f5e9; border: 1px solid #4caf50; border-radius: 8px; padding: 20px; margin: 20px 0;">
+              <h3 style="color: #2e7d32; margin: 0 0 10px 0;">Your New Level: Level ${newLevel}</h3>
+              <p style="color: #2e7d32; margin: 0; line-height: 1.5;">
+                You now have access to exclusive features and higher earning potential!
+              </p>
+            </div>
+            
+            <p style="color: #666; line-height: 1.6;">
+              Start completing tasks and take advantage of your new level benefits.
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${process.env.PLATFORM_URL || 'http://localhost:3000'}/dashboard" 
+                 style="background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                View Dashboard
+              </a>
+            </div>
+          </div>
+          
+          <div style="text-align: center; padding: 20px; background: #f8f9fa; color: #666; font-size: 14px;">
+            <p style="margin: 0;">© 2024 PromoHive. All rights reserved.</p>
+          </div>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    logger.info(`Level upgrade approved email sent to ${email}`);
+  } catch (error) {
+    logger.error('Failed to send level upgrade approved email:', error);
+    throw error;
+  }
+};
+
+// Level Upgrade Rejected Email
+export const sendLevelUpgradeRejectedEmail = async (email: string, fullName: string, reason: string) => {
+  try {
+    const mailOptions = {
+      from: process.env.SMTP_FROM || 'promohive@globalpromonetwork.store',
+      to: email,
+      subject: '❌ Level Upgrade Rejected - PromoHive',
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="text-align: center; padding: 20px; background: linear-gradient(135deg, #dc3545 0%, #c82333 100%); color: white;">
+            <h1 style="margin: 0; font-size: 28px;">❌ Level Upgrade Rejected</h1>
+            <p style="margin: 10px 0 0 0; font-size: 16px;">PromoHive</p>
+          </div>
+          
+          <div style="padding: 30px; background: #f8f9fa;">
+            <h2 style="color: #333; margin-bottom: 20px;">Hello ${fullName}!</h2>
+            
+            <p style="color: #666; line-height: 1.6; margin-bottom: 20px;">
+              We regret to inform you that your level upgrade request has been rejected.
+            </p>
+            
+            <div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 8px; padding: 20px; margin: 20px 0;">
+              <h3 style="color: #721c24; margin: 0 0 10px 0;">Rejection Reason</h3>
+              <p style="color: #721c24; margin: 0; line-height: 1.5;">
+                ${reason}
+              </p>
+            </div>
+            
+            <p style="color: #666; line-height: 1.6;">
+              Please continue completing tasks to meet the requirements. You can try again once you meet the necessary criteria.
+            </p>
+            
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${process.env.PLATFORM_URL || 'http://localhost:3000'}/dashboard" 
+                 style="background: #667eea; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; display: inline-block;">
+                View Dashboard
+              </a>
+            </div>
+          </div>
+          
+          <div style="text-align: center; padding: 20px; background: #f8f9fa; color: #666; font-size: 14px;">
+            <p style="margin: 0;">© 2024 PromoHive. All rights reserved.</p>
+          </div>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    logger.info(`Level upgrade rejected email sent to ${email}`);
+  } catch (error) {
+    logger.error('Failed to send level upgrade rejected email:', error);
     throw error;
   }
 };
